@@ -15,13 +15,15 @@ import org.hibernate.validator.constraints.br.CNPJ;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(name = "Clientes")
 
 //Representação de um cliente no sistema.
 public class Cliente {
 
     @JsonProperty("cliente_id")
+    @Column(name = "cliente_id")
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonProperty("nome")
@@ -34,8 +36,8 @@ public class Cliente {
     private String cnpj;
 
     @JsonProperty("email")
-    @Email
     @Column(nullable = false)
+    @Email
     private String email;
 
     @JsonProperty("telefone")
@@ -44,5 +46,5 @@ public class Cliente {
 
 //0 ou mais contratos - voltar aqui depois
     //@ManyToOne
-    //array de contratos em Cliente?
+    //atributo de documento em Cliente?
 }
