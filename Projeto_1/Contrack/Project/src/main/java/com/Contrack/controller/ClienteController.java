@@ -11,7 +11,7 @@ import com.Contrack.service.ClienteService;
 
 @RestController
 @RequestMapping(
-        value = "/cliente",
+        value = "/clientes",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
 
