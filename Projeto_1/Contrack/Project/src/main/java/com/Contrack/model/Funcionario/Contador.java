@@ -1,4 +1,4 @@
-package model.Funcionario;
+package com.Contrack.model.Funcionario;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
@@ -7,10 +7,10 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = true)
 @Entity
 @Builder
-@DiscriminatorValue("ANALISTA")
+@DiscriminatorValue("CONTADOR")
 @Data
 @NoArgsConstructor
 
-public class Analista extends Funcionario {
+public class Contador extends Funcionario {
     //Vazia por enquanto
 }

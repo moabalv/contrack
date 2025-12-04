@@ -1,13 +1,13 @@
-package model;
+package com.Contrack.model;
 
 
+import com.Contrack.model.Funcionario.Funcionario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import model.Funcionario.Funcionario;
 
 import java.util.ArrayList;
 import java.util.List;

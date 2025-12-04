@@ -1,6 +1,6 @@
-package model;
+package com.Contrack.model;
 
-import enums.Status_Notificacao;
+import com.Contrack.enums.Status_Notificacao;
 
 
 public class Notificacao {

@@ -1,4 +1,4 @@
-package model;
+package com.Contrack.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,7 +17,6 @@ import org.hibernate.validator.constraints.br.CNPJ;
 @Builder
 @Table(name = "Clientes")
 
-//Representação de um cliente no sistema.
 public class Cliente {
 
     @JsonProperty("cliente_id")

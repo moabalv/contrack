@@ -1,7 +1,8 @@
-package model;
+package com.Contrack.model;
 
+import com.Contrack.enums.TipoDocumento;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import enums.TipoDocumento;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
