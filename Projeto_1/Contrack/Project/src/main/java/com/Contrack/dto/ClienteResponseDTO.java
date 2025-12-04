@@ -18,19 +18,7 @@ public class ClienteResponseDTO {
     @Id
     private Long id;
 
-    @JsonProperty("nome")
-    private String nome;
-
-    @JsonProperty("email")
-    private String email;
-
-    @JsonProperty("telefone")
-    private String telefone;
-
     public ClienteResponseDTO(Cliente cliente){
         this.id = cliente.getId();
-        this.nome = cliente.getNome();
-        this.email = cliente.getEmail();
-        this.telefone = cliente.getTelefone();
     }
 }
