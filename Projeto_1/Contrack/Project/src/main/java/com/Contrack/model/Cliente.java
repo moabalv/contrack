@@ -1,4 +1,4 @@
-package model;
+package com.Contrack.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
