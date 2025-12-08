@@ -1,8 +1,11 @@
-package com.Contrack.model;
+package com.Contrack.model.Documento;
 
 import com.Contrack.enums.Prioridade;
 import com.Contrack.enums.StatusDocumento;
 import com.Contrack.enums.TipoDocumento;
+import com.Contrack.model.Cliente;
+import com.Contrack.model.Documento.States.DocumentoState;
+import com.Contrack.model.Documento.States.DocumentoStateFactory;
 import com.Contrack.model.Funcionario.Funcionario;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
