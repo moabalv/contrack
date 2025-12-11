@@ -17,7 +17,6 @@ import org.hibernate.validator.constraints.br.CNPJ;
 @Builder
 @Table(name = "Clientes")
 
-//Representação de um cliente no sistema.
 public class Cliente {
 
     @JsonProperty("cliente_id")

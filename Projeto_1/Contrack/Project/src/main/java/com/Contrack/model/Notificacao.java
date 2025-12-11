@@ -1,18 +1,8 @@
 package com.Contrack.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.Contrack.enums.Status_Notificacao;
-import jakarta.persistence.*;
-import lombok.*;
+import jakarta.persistence.EnumType;
 
-import java.time.LocalDateTime;
-
-@Entity
-@Data
-@Table(name = "notificacoes")
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 
 public class Notificacao {
 

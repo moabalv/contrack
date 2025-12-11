@@ -1,4 +1,4 @@
-package com.Contrack.model.Funcionario;
+package model.Funcionario;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -8,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 import com.Contrack.model.Setor;
+
 import org.hibernate.validator.constraints.br.CPF;
 
 @Entity
@@ -45,5 +46,4 @@ public abstract class Funcionario {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "setor_id")
     private Setor setor;
-
 }

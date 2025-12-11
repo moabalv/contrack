@@ -1,4 +1,4 @@
-package com.Contrack.model;
+package model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.Contrack.model.Funcionario.Funcionario;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
