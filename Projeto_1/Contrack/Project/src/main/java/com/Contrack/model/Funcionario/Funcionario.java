@@ -1,4 +1,4 @@
-package model.Funcionario;
+package com.Contrack.model.Funcionario;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;

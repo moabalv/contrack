@@ -1,4 +1,4 @@
-package model;
+package com.Contrack.model;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,14 +24,13 @@ public class Setor {
     @Column(name = "setor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    //Nao tinha ID no UML, mas achei que era necessario pra ser PK no BD
     private Long id;
 
     @JsonProperty("nome")
     @Column(nullable = false)
     private String nome;
 
-    //Ja inicializa aqui?
     @OneToMany(mappedBy = "setor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Funcionario> funcionarios;
+    @Builder.Default
+    private List<Funcionario> funcionarios = new ArrayList<>();
 }

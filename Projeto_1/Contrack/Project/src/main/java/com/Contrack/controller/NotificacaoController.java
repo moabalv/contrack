@@ -1,7 +1,7 @@
 package com.Contrack.controller;
 
 
-import com.Contrack.service.NotificacaoService;
+import com.Contrack.service.NotificacaoServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 public class NotificacaoController {
 
     @Autowired
-    NotificacaoService notificacaoService;
+    NotificacaoServiceImpl notificacaoServiceImpl;
 
     @GetMapping
     public ResponseEntity<?> listarNotificacoes() {
-        return ResponseEntity.ok(notificacaoService.listarNotificacoes());
+        return ResponseEntity.ok(notificacaoServiceImpl.listarNotificacoes());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<?> listarNotificacoesPorId(Long id) {
-        return ResponseEntity.ok(notificacaoService.obterNotificacaoPorId(id));
+        return ResponseEntity.ok(notificacaoServiceImpl.obterNotificacaoPorId(id));
     }
 }
