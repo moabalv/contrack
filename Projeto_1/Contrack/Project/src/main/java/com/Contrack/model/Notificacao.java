@@ -1,18 +1,51 @@
 package com.Contrack.model;
 
 import com.Contrack.enums.Status_Notificacao;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import com.Contrack.model.Documento.Documento;
+import java.time.LocalDateTime;
 
+@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "Notificacoes")
 
 public class Notificacao {
 
+    @JsonProperty("notificacao_id")
+    @Column(name = "id")
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "documento_id")
     private Documento documento;
 
+    @ManyToOne
+    @JoinColumn(name = "setor_id")
     private Setor setor;
 
-    private String notificacao;
+    @Column(nullable = false, length = 200)
+    private String titulo;
 
-    private String detalhes;
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String mensagem;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Status_Notificacao status;
+
+    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean lido;
+
+    @Column(name = "data_notificao", nullable = false)
+    private LocalDateTime data;
 }

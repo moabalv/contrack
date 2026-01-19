@@ -1,13 +1,13 @@
 package com.Contrack.model;
 
 
-import com.Contrack.model.Funcionario.Funcionario;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.Contrack.model.Funcionario.Funcionario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +24,13 @@ public class Setor {
     @Column(name = "setor_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    //Nao tinha ID no UML, mas achei que era necessario pra ser PK no BD
     private Long id;
 
     @JsonProperty("nome")
     @Column(nullable = false)
     private String nome;
 
-    //Ja inicializa aqui?
     @OneToMany(mappedBy = "setor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Funcionario> funcionarios;
+    @Builder.Default
+    private List<Funcionario> funcionarios = new ArrayList<>();
 }

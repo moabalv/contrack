@@ -1,14 +1,13 @@
 package com.Contrack.model.Funcionario;
 
-import com.Contrack.model.Setor;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import com.Contrack.model.Setor;
 
 import org.hibernate.validator.constraints.br.CPF;
 
