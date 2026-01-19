@@ -2,7 +2,7 @@ package com.Contrack.Mapper;
 
 
 import com.Contrack.dto.Documento.DocumentoResponseDTO;
-import com.Contrack.model.Documento;
+import com.Contrack.model.Documento.Documento;
 import com.Contrack.model.Funcionario.Funcionario;
 import org.springframework.stereotype.Component;
 
@@ -27,7 +27,7 @@ public class DocumentoMapper {
             .valor(documento.getValor())
             .cliente(documento.getCliente().getCnpj())
             .dataAssinatura(documento.getDataAssinatura())
-            .prazo(documento.getPrazo())
+            .prazo(documento.getDataVencimento())
             .colaboradores(documento.getColaboradores().stream()
                     .map(Funcionario::getEmail)
                     .toList())
