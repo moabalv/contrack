@@ -7,7 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
+import com.Contrack.model.Documento.Documento;
 import java.time.LocalDateTime;
 
 @Entity
