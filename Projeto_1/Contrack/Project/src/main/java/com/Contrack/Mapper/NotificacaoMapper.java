@@ -38,6 +38,7 @@ public class NotificacaoMapper {
         return NotificacaoGetRequestDTO.builder()
                 .id(notificacao.getId())
                 .titulo(notificacao.getTitulo())
+                .mensagem(notificacao.getMensagem())
                 .lido(notificacao.isLido())
                 .data(notificacao.getData().format(DATE_FORMATTER))
                 .build();
