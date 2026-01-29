@@ -11,5 +11,6 @@ public interface NotificacaoService {
 
     NotificacaoGetResponseDTO obterNotificacaoPorId(Long id);
 
+    NotificacaoGetResponseDTO marcarComoLida(Long id);
 
 }

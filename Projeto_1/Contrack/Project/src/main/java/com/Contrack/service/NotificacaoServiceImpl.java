@@ -3,6 +3,7 @@ package com.Contrack.service;
 
 import com.Contrack.dto.Notificacao.NotificacaoGetRequestDTO;
 import com.Contrack.dto.Notificacao.NotificacaoGetResponseDTO;
+import com.Contrack.enums.Status_Notificacao;
 import com.Contrack.exception.NotificacaoNaoExisteException;
 import jakarta.transaction.Transactional;
 import com.Contrack.model.Notificacao;
@@ -36,6 +37,13 @@ public class NotificacaoServiceImpl implements NotificacaoService {
         Notificacao notificacao = notificacaoRepository.findById(id).orElseThrow(NotificacaoNaoExisteException::new);
         return modelMapper.map(notificacao, NotificacaoGetResponseDTO.class);
     }
+
+    public NotificacaoGetResponseDTO marcarComoLida(Long id) {
+        Notificacao notificacao = notificacaoRepository.findById(id).orElseThrow(NotificacaoNaoExisteException::new);
+        if (!notificacao.isLido()) {
+            notificacao.setLido(true);
+            notificacao.setStatus(Status_Notificacao.RESOLVIDO);
+        }
+        return modelMapper.map(notificacaoRepository.save(notificacao), NotificacaoGetResponseDTO.class);
+    }
 }
-
-
