@@ -1,6 +1,6 @@
 package com.Contrack.model;
 
-import com.Contrack.enums.Status_Notificacao;
+import com.Contrack.enums.Status;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -8,6 +8,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.Contrack.model.Documento.Documento;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -37,15 +39,15 @@ public class Notificacao {
     private String titulo;
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    private String mensagem;
+    private String descricao;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Status_Notificacao status;
+    private Status status;
 
-    @Column(nullable = false, columnDefinition = "BOOLEAN DEFAULT false")
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private boolean lido;
 
-    @Column(name = "data_notificao", nullable = false)
-    private LocalDateTime data;
+    @Column(name = "data_notificacao", nullable = false)
+    private LocalDate data;
 }
