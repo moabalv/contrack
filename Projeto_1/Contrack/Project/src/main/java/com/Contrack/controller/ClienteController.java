@@ -19,6 +19,13 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> listarClientePorId(@PathVariable Long id){
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(clienteService.listarClienteId(id));
+    }
+    
     @GetMapping("")
     public ResponseEntity<?> listarClientes() {
         return ResponseEntity
