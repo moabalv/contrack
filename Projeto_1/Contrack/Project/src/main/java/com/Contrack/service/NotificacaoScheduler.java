@@ -24,56 +24,83 @@ public class NotificacaoScheduler {
     private final DocumentoRepository documentoRepository;
     private final NotificacaoRepository notificacaoRepository;
 
-    @Scheduled(cron = "0 0 7 * * *", zone = "America/Sao_Paulo") // Todo dia as 07:00
+    @Scheduled(cron = "1 * * * * *", zone = "America/Sao_Paulo") // Rodando a cada minuto para testes
     @Transactional
     public void processarVencimentos() {
         LocalDate hoje = LocalDate.now();
+
+        // --- CENÁRIO 1: Vence HOJE ---
+        verificarEGerar(
+            hoje, 
+            "ATENÇÃO: Documento vence hoje.", 
+            "vence hoje"
+        );
+
+        // --- CENÁRIO 2: Vence AMANHÃ (Daqui a 1 dia) ---
+        verificarEGerar(
+            hoje.plusDays(1), 
+            "AVISO: Documento vence amanhã.", 
+            "vence amanhã"
+        );
+
+        // --- CENÁRIO 3: Vence SEMANA QUE VEM (Daqui a 7 dias) ---
+        verificarEGerar(
+            hoje.plusDays(7), 
+            "LEMBRETE: Documento vence em 7 dias.", 
+            "vence em 7 dias"
+        );
+    }
+
+    /**
+     * Método genérico que busca documentos de uma data especifica e gera notificações
+     */
+    private void verificarEGerar(LocalDate dataBusca, String titulo, String textoTempo) {
         
-    
-        String tituloVencimentoHoje = "ATENÇÃO: Documento vence hoje.";
-        LocalDateTime inicioDia = hoje.atStartOfDay();
-        LocalDateTime fimDia = LocalDateTime.of(hoje, LocalTime.MAX);
+        // 1. Busca documentos que vencem na data calculada (hoje, amanhã ou daqui 7 dias)
+        List<Documento> documentos = documentoRepository.findByDataVencimento(dataBusca);
 
-        // Buscar documentos que vencem HOJE
-        List<Documento> documentosVencendoHoje = documentoRepository.findByDataVencimento(hoje);
+        // 2. Define o intervalo de "HOJE" para verificar se já rodamos o script hoje
+        // Importante: A verificação de duplicidade é sempre sobre "HOJE", independente de quando o doc vence.
+        LocalDateTime inicioDiaHoje = LocalDate.now().atStartOfDay();
+        LocalDateTime fimDiaHoje = LocalDateTime.of(LocalDate.now(), LocalTime.MAX);
 
-        for (Documento doc : documentosVencendoHoje) {
+        for (Documento doc : documentos) {
             
-            // Verifica se já notificamos hoje sobre isso
+            // Verifica se já criamos uma notificação com ESSE TÍTULO para esse documento HOJE
             boolean jaNotificado = notificacaoRepository.existsByDocumentoAndTituloAndDataBetween(
-                    doc, tituloVencimentoHoje, inicioDia, fimDia
+                    doc, titulo, inicioDiaHoje, fimDiaHoje
             );
 
             if (!jaNotificado) {
-                criarNotificacaoVencimentoHoje(doc, tituloVencimentoHoje);
+                criarNotificacao(doc, titulo, textoTempo);
             }
         }
     }
 
-    private void criarNotificacaoVencimentoHoje(Documento doc, String titulo) {
+    private void criarNotificacao(Documento doc, String titulo, String textoTempo) {
         // --- MONTAGEM DA MENSAGEM INTELIGENTE ---
-        // Padrão sugerido: {{ENTIDADE:ID|NOME_PARA_EXIBIR}}
-        
         String nomeCliente = doc.getCliente().getNome();
         Long idCliente = doc.getCliente().getId();
 
+        // Monta a mensagem dinâmica: "... vence hoje" ou "... vence amanhã", etc.
         String mensagemDetalhada = String.format(
-            "O documento referente ao cliente {{CLIENTE:%d|%s}} vence hoje. Verifique os detalhes do documento {{DOCUMENTO:%d|aqui}}.",
-            idCliente, nomeCliente, // Preenche cliente
-            doc.getId()             // Preenche documento
+            "O documento referente ao cliente {{CLIENTE:%d|%s}} %s. Verifique os detalhes do documento {{DOCUMENTO:%d|aqui}}.",
+            idCliente, nomeCliente, 
+            textoTempo, // Aqui entra o "vence hoje", "vence amanhã", etc.
+            doc.getId()
         );
 
         Notificacao notificacao = Notificacao.builder()
                 .documento(doc)
-                .setor(null) //lógica de setor
+                .setor(null) // ou null, conforme sua lógica
                 .titulo(titulo)
                 .mensagem(mensagemDetalhada)
                 .status(Status_Notificacao.PENDENTE)
                 .lido(false)
-                .data(LocalDateTime.now())
+                .data(LocalDateTime.now()) // Data de criação da notificação é AGORA
                 .build();
 
         notificacaoRepository.save(notificacao);
-        log.info("Notificação criada para documento ID {}", doc.getId());
+        log.info("Notificação gerada: '{}' para documento ID {}", titulo, doc.getId());
     }
 }
