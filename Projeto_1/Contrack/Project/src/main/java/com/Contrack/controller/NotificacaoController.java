@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,7 +25,12 @@ public class NotificacaoController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> listarNotificacoesPorId(Long id) {
+    public ResponseEntity<?> listarNotificacoesPorId(@PathVariable Long id) {
         return ResponseEntity.ok(notificacaoServiceImpl.obterNotificacaoPorId(id));
+    }
+
+    @PostMapping("/{id}/lida")
+    public ResponseEntity<?> marcarComoLida(@PathVariable Long id) {
+        return ResponseEntity.ok(notificacaoServiceImpl.marcarComoLida(id));
     }
 }
