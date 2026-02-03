@@ -1,10 +1,12 @@
 package com.Contrack.model.renovacao;
 
+import com.Contrack.enums.StatusEtapaRenovacao;
 import com.Contrack.enums.StatusProcessoRenovacao;
 import com.Contrack.model.Documento.Documento;
 import com.Contrack.model.Funcionario.Funcionario;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Embeddable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -14,16 +16,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,7 +30,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@SuperBuilder
+@Builder
 public class ProcessoRenovacao {
 
     @Id
@@ -62,21 +61,25 @@ public class ProcessoRenovacao {
     @Column(name = "data_fim")
     private LocalDate dataFim;
 
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    /**
+     * Snapshot simples das etapas (apenas nome + status) no momento da criação.
+     */
+    @ElementCollection
+    private List<EtapaExecucao> etapas;
+
+    @Column(name = "indice_etapa_atual", nullable = false)
     @Builder.Default
-    private List<EtapaProcesso> etapas = new ArrayList<>();
+    private Integer indiceEtapaAtual = 0;
 
-    @OneToMany(mappedBy = "processo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<RegistroHistorico> historicos = new ArrayList<>();
-
-    public void adicionarEtapa(EtapaProcesso etapa) {
-        etapa.setProcesso(this);
-        this.etapas.add(etapa);
-    }
-
-    public void adicionarHistorico(RegistroHistorico registro) {
-        registro.setProcesso(this);
-        this.historicos.add(registro);
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Builder
+    @Embeddable
+    public static class EtapaExecucao {
+        private String nome;
+        @Enumerated(EnumType.STRING)
+        @Builder.Default
+        private StatusEtapaRenovacao status = StatusEtapaRenovacao.PENDENTE;
     }
 }

@@ -1,21 +1,21 @@
 package com.Contrack.model.renovacao;
 
-import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OrderBy;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,21 +34,15 @@ public class Fluxograma {
     @Column(nullable = false, unique = true)
     private String nome;
 
-    @Column(length = 1000)
+    @Column(length = 500)
     private String descricao;
 
-    @OneToMany(mappedBy = "fluxograma", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @OrderBy("ordem ASC")
-    @Builder.Default
-    private List<EtapaModelo> etapas = new ArrayList<>();
-
-    public void adicionarEtapa(EtapaModelo etapa) {
-        etapa.setFluxograma(this);
-        this.etapas.add(etapa);
-    }
-
-    public void limparEtapas() {
-        this.etapas.forEach(e -> e.setFluxograma(null));
-        this.etapas.clear();
-    }
+    /**
+     * Lista encadeada de etapas apenas por nome.
+     * OrderColumn preserva a sequência definida pelo administrador.
+     */
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "Fluxograma_Etapas", joinColumns = @JoinColumn(name = "fluxograma_id"))
+    @OrderColumn(name = "ordem")
+    private List<String> etapas;
 }
