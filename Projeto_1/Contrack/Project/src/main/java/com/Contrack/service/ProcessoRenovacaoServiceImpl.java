@@ -36,15 +36,12 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
                 .orElseThrow(() -> new IllegalArgumentException("Contrato não encontrado"));
         Fluxograma fluxograma = fluxogramaRepository.findById(dto.getFluxogramaId())
                 .orElseThrow(() -> new IllegalArgumentException("Fluxograma não encontrado"));
-        Funcionario responsavel = funcionarioRepository.findById(dto.getResponsavelPrincipalId())
-                .orElseThrow(() -> new IllegalArgumentException("Responsável não encontrado"));
 
         LocalDate inicio = dto.getDataInicio() != null ? dto.getDataInicio() : LocalDate.now();
 
         ProcessoRenovacao processo = ProcessoRenovacao.builder()
                 .contrato(contrato)
                 .fluxograma(fluxograma)
-                .responsavelPrincipal(responsavel)
                 .dataInicio(inicio)
                 .status(StatusProcessoRenovacao.EM_ANDAMENTO)
                 .build();
