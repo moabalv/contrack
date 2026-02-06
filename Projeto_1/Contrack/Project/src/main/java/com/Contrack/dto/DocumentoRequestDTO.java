@@ -23,6 +23,9 @@ public class DocumentoRequestDTO {
     @JsonAlias({"documento_id", "id"})
     private Long documentoId;
 
+    @JsonProperty("titulo")
+    private String titulo;
+
     @NotBlank
     @JsonProperty("tipoDocumento")
     private String tipoDocumento;
