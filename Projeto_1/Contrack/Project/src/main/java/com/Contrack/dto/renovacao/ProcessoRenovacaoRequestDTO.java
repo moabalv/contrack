@@ -8,10 +8,10 @@ import java.time.LocalDate;
 @Data
 public class ProcessoRenovacaoRequestDTO {
     @NotNull
-    private Long contratoId;
+    private Long documentoId;
     @NotNull
     private Long fluxogramaId;
-    
+
     private Long responsavelPrincipalId;
     private LocalDate dataInicio;
 }
