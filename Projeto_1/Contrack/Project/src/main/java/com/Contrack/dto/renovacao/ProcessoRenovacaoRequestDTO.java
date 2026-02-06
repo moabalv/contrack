@@ -11,7 +11,7 @@ public class ProcessoRenovacaoRequestDTO {
     private Long contratoId;
     @NotNull
     private Long fluxogramaId;
-    @NotNull
+    
     private Long responsavelPrincipalId;
     private LocalDate dataInicio;
 }

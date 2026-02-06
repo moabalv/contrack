@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:5173")
 @RequestMapping(value = "/processos-renovacao", produces = MediaType.APPLICATION_JSON_VALUE)
 public class ProcessoRenovacaoController {
 
