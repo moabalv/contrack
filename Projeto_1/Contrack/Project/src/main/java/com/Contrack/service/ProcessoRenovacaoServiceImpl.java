@@ -32,7 +32,7 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
     @Override
     @Transactional
     public ProcessoRenovacao criar(ProcessoRenovacaoRequestDTO dto) {
-        Documento contrato = documentoRepository.findById(dto.getContratoId())
+        Documento contrato = documentoRepository.findById(dto.getDocumentoId())
                 .orElseThrow(() -> new IllegalArgumentException("Contrato não encontrado"));
         Fluxograma fluxograma = fluxogramaRepository.findById(dto.getFluxogramaId())
                 .orElseThrow(() -> new IllegalArgumentException("Fluxograma não encontrado"));
