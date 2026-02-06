@@ -51,4 +51,11 @@ public class DocumentoController {
                 .status(HttpStatus.OK)
                 .body(documentoService.getDocumentoByClienteId(clienteId));
     }
+
+    @PostMapping(value = "/atualizar", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> atualizarDocumento(@Valid @RequestBody DocumentoRequestDTO documentoRequestDTO) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(documentoService.atualizaDocumento(documentoRequestDTO));
+    }
 }
