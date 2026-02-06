@@ -98,6 +98,17 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
                 .orElseThrow(() -> new IllegalArgumentException("Processo não encontrado"));
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public ProcessoRenovacao buscarPorDocumento(Long id) {
+        List<ProcessoRenovacao> processos = processoRenovacaoRepository.findAllByContratoId(id);
+        
+        if (processos.isEmpty()) {
+            throw new IllegalArgumentException("Nenhum processo encontrado para este documento");
+        }
+    return processos.get(0); 
+    }
+
     private void atualizarStatusProcesso(ProcessoRenovacao processo, boolean etapaAtrasada) {
         boolean algumaAtrasada = etapaAtrasada
                 || processo.getEtapas().stream().anyMatch(e -> e.getStatus() == StatusEtapaRenovacao.ATRASADA);

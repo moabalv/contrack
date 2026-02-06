@@ -10,5 +10,6 @@ public interface ProcessoRenovacaoService {
     ProcessoRenovacao criar(ProcessoRenovacaoRequestDTO dto);
     ProcessoRenovacao concluirEtapaAtual(Long processoId, ConclusaoEtapaDTO dto);
     List<ProcessoRenovacao> listar();
+    ProcessoRenovacao buscarPorDocumento(Long id);
     ProcessoRenovacao buscar(Long id);
 }

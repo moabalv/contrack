@@ -33,6 +33,10 @@ public class ProcessoRenovacaoController {
         return ResponseEntity.ok(processoRenovacaoService.buscar(id));
     }
 
+    @GetMapping("/documento/{id}")
+    public ResponseEntity<?> buscarPorDocumento(@PathVariable Long id) {
+        return ResponseEntity.ok(processoRenovacaoService.buscarPorDocumento(id));
+    }
     @PatchMapping(value = "/{id}/etapa/atual", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> concluirEtapaAtual(@PathVariable Long id, @RequestBody ConclusaoEtapaDTO dto) {
         return ResponseEntity.ok(processoRenovacaoService.concluirEtapaAtual(id, dto));
