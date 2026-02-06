@@ -1,0 +1,39 @@
+package com.Contrack.controller;
+
+import com.Contrack.dto.renovacao.ConclusaoEtapaDTO;
+import com.Contrack.dto.renovacao.ProcessoRenovacaoRequestDTO;
+import com.Contrack.service.ProcessoRenovacaoService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping(value = "/processos-renovacao", produces = MediaType.APPLICATION_JSON_VALUE)
+public class ProcessoRenovacaoController {
+
+    private final ProcessoRenovacaoService processoRenovacaoService;
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> criar(@Valid @RequestBody ProcessoRenovacaoRequestDTO dto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(processoRenovacaoService.criar(dto));
+    }
+
+    @GetMapping
+    public ResponseEntity<?> listar() {
+        return ResponseEntity.ok(processoRenovacaoService.listar());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> buscar(@PathVariable Long id) {
+        return ResponseEntity.ok(processoRenovacaoService.buscar(id));
+    }
+
+    @PatchMapping(value = "/{id}/etapa/atual", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> concluirEtapaAtual(@PathVariable Long id, @RequestBody ConclusaoEtapaDTO dto) {
+        return ResponseEntity.ok(processoRenovacaoService.concluirEtapaAtual(id, dto));
+    }
+}
