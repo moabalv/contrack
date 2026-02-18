@@ -17,12 +17,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @AllArgsConstructor
 @SuperBuilder
 @Table(name = "Funcionarios")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_funcionario", discriminatorType = DiscriminatorType.STRING)
-//Tomei a liberdade de juntar os tipos de funcionarios para ter um unico BD de Funcionarios
-//No BD vai ter um atributo tipo_funcionario pra identificar. Pode mudar isso depois se não for o design desejado!
-
-public abstract class Funcionario {
+public class Funcionario {
 
     @JsonProperty("funcionario_id")
     @Id
