@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,5 +59,12 @@ public class DocumentoController {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(documentoService.atualizaDocumento(documentoRequestDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<?> apagarDocumento(@PathVariable Long id) {
+        documentoService.apagarDocumento(id);
+        return ResponseEntity.noContent().build();
     }
 }

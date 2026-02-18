@@ -11,5 +11,5 @@ public interface DocumentoService {
     DocumentoResponseDTO criarDocumento(DocumentoRequestDTO documentoRequestDTO);
     DocumentoResponseDTO atualizaDocumento (DocumentoRequestDTO documentoRequestDTO);
     List<DocumentoResponseDTO> getDocumentoByClienteId(Long clienteId);
-    //void apagarDocumento (Long id, Long usuarioId)
+    void apagarDocumento(Long id);
 }

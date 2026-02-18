@@ -1,11 +1,13 @@
 package com.Contrack.model.Funcionario;
 
+import com.Contrack.enums.Role;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import com.Contrack.model.Setor;
 
@@ -16,6 +18,7 @@ import org.hibernate.validator.constraints.br.CPF;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
+@ToString(exclude = "senha")
 @Table(name = "Funcionarios")
 public class Funcionario {
 
@@ -37,6 +40,14 @@ public class Funcionario {
     @Column(nullable = false, unique = true)
     @Email
     private String email;
+
+    @JsonProperty(value = "senha", access = JsonProperty.Access.WRITE_ONLY)
+    @Column(nullable = false)
+    private String senha;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "setor_id")
