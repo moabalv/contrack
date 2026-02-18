@@ -104,7 +104,7 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
         List<ProcessoRenovacao> processos = processoRenovacaoRepository.findAllByContratoId(id);
         
         if (processos.isEmpty()) {
-            throw new IllegalArgumentException("Nenhum processo encontrado para este documento");
+            return null;
         }
     return processos.get(0); 
     }
