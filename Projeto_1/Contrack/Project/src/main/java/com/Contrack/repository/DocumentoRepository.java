@@ -1,5 +1,6 @@
 package com.Contrack.repository;
 
+import com.Contrack.model.Cliente;
 import com.Contrack.model.Documento.Documento;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,4 +16,6 @@ public interface DocumentoRepository extends JpaRepository<Documento, Long> {
     List<Documento> findByDataVencimento(
         @Param("data") LocalDate data
     );
+
+    List<Documento> findByCliente(Cliente cliente);
 }

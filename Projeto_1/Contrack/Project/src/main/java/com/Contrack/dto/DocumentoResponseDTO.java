@@ -19,6 +19,7 @@ public class DocumentoResponseDTO {
 
     private final Long id;
     private final TipoDocumento tipoDocumento;
+    private final String titulo;
     private final Prioridade prioridade;
     private final BigDecimal valor;
     private final LocalDate dataAssinatura;
@@ -29,9 +30,11 @@ public class DocumentoResponseDTO {
     @JsonProperty("colaboradores")
     private final List<Long> colaboradoresIds;
 
+
     public DocumentoResponseDTO(Documento documento) {
         this.id = documento.getId();
         this.tipoDocumento = documento.getTipoDocumento();
+        this.titulo = documento.getTitulo();
         this.prioridade = documento.getPrioridade();
         this.valor = documento.getValor();
         this.dataAssinatura = documento.getDataAssinatura();

@@ -37,10 +37,25 @@ public class DocumentoController {
                 .body(documentoService.buscarDocumento(id));
     }
 
+
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> criarDocumento(@Valid @RequestBody DocumentoRequestDTO documentoRequestDTO) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(documentoService.criarDocumento(documentoRequestDTO));
+    }
+
+    @GetMapping("/cliente/{clienteId}")
+    public ResponseEntity<?> getDocumentoByClienteId(@PathVariable Long clienteId) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(documentoService.getDocumentoByClienteId(clienteId));
+    }
+
+    @PostMapping(value = "/atualizar", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> atualizarDocumento(@Valid @RequestBody DocumentoRequestDTO documentoRequestDTO) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(documentoService.atualizaDocumento(documentoRequestDTO));
     }
 }

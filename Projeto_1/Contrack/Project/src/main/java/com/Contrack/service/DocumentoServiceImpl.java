@@ -33,6 +33,16 @@ public class DocumentoServiceImpl implements DocumentoService {
     private final DocumentoRepository documentoRepository;
     private final ClienteRepository clienteRepository;
     private final FuncionarioRepository funcionarioRepository;
+    
+    @Override
+    @Transactional
+    public List<DocumentoResponseDTO> getDocumentoByClienteId(Long clienteId) {
+        Cliente cliente = clienteRepository.findById(clienteId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+        List<Documento> documentos = documentoRepository.findByCliente(cliente);
+        return documentos.stream()
+                .map(DocumentoResponseDTO::new)
+                .collect(Collectors.toList());}
 
     @Override
     @Transactional
