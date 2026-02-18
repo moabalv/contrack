@@ -7,4 +7,5 @@ import java.io.IOException;
 public interface ArquivoService {
     void salvarArquivo(Long documentoId, MultipartFile file) throws IOException;
     ArquivoPDF buscarPorDocumentoId(Long documentoId);
+    void deletarArquivo(Long documentoId);
 }

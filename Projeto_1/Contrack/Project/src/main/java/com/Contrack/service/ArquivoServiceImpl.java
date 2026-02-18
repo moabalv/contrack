@@ -38,6 +38,13 @@ public class ArquivoServiceImpl implements ArquivoService {
     }
 
     @Override
+    @Transactional
+    public void deletarArquivo(Long documentoId) {
+        ArquivoPDF arquivo = arquivoRepository.findByDocumentoId(documentoId).orElseThrow(() -> new EntityNotFoundException("Arquivo não encontrado para o documento ID: " + documentoId));
+        arquivoRepository.delete(arquivo);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public ArquivoPDF buscarPorDocumentoId(Long documentoId) {
         ArquivoPDF arquivo = arquivoRepository.findByDocumentoId(documentoId)
