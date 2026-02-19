@@ -1,5 +1,6 @@
 package com.Contrack.repository;
 
+import com.Contrack.enums.StatusDocumento;
 import com.Contrack.model.Cliente;
 import com.Contrack.model.Documento.Documento;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,4 +19,7 @@ public interface DocumentoRepository extends JpaRepository<Documento, Long> {
     );
 
     List<Documento> findByCliente(Cliente cliente);
+
+    @Query("SELECT d FROM Documento d WHERE d.status = :status")
+    List<Documento> findByStatus(@Param("status") StatusDocumento status);
 }
