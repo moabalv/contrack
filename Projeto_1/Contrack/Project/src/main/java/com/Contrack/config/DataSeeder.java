@@ -1,6 +1,7 @@
 package com.Contrack.config;
 
 import com.Contrack.enums.Prioridade;
+import com.Contrack.enums.StatusDocumento;
 import com.Contrack.enums.TipoDocumento;
 import com.Contrack.model.Cliente;
 import com.Contrack.model.Documento.Documento;
@@ -68,6 +69,9 @@ public class DataSeeder {
                     LocalDate.now().minusYears(1),
                     LocalDate.now().plusDays(7)   // VENCIMENTO = DAQUI 7 DIAS
             );
+            docVenceAmanha.setStatus(StatusDocumento.PROXIMO_DO_VENCIMENTO);
+            docVenceSemanaQueVem.setStatus(StatusDocumento.PROXIMO_DO_VENCIMENTO);       
+            docVenceHoje.setStatus(StatusDocumento.PROXIMO_DO_VENCIMENTO);
 
             // 3. Salvar tudo no banco
             documentoRepo.saveAll(Arrays.asList(docVenceHoje, docVenceAmanha, docVenceSemanaQueVem));
