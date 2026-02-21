@@ -1,5 +1,6 @@
 package com.Contrack.service;
 
+import com.Contrack.dto.Auth.AlterarSenhaRequestDTO;
 import com.Contrack.dto.Funcionario.FuncionarioRequestDTO;
 import com.Contrack.dto.Funcionario.FuncionarioResponseDTO;
 import com.Contrack.enums.Role;
@@ -55,6 +56,24 @@ public class FuncionarioServiceImpl implements FuncionarioService {
                 .build();
 
         return new FuncionarioResponseDTO(funcionarioRepository.save(funcionario));
+    }
+
+    @Override
+    @Transactional
+    public void alterarSenha(String email, AlterarSenhaRequestDTO dto) {
+        Funcionario funcionario = funcionarioRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionário não encontrado"));
+
+        if (!passwordEncoder.matches(dto.getSenhaAtual(), funcionario.getSenha())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Senha atual inválida");
+        }
+
+        if (dto.getSenhaAtual().equals(dto.getNovaSenha())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A nova senha deve ser diferente da atual");
+        }
+
+        funcionario.setSenha(passwordEncoder.encode(dto.getNovaSenha()));
+        funcionarioRepository.save(funcionario);
     }
 
     @Override
