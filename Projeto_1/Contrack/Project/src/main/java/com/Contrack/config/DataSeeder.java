@@ -1,16 +1,20 @@
 package com.Contrack.config;
 
+import com.Contrack.enums.Role;
 import com.Contrack.enums.Prioridade;
 import com.Contrack.enums.TipoDocumento;
 import com.Contrack.model.Cliente;
 import com.Contrack.model.Documento.Documento;
 import com.Contrack.model.Documento.Factory.DocumentoFactory;
+import com.Contrack.model.Funcionario.Funcionario;
 import com.Contrack.repository.ClienteRepository;
 import com.Contrack.repository.DocumentoRepository;
+import com.Contrack.repository.FuncionarioRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,8 +25,25 @@ import java.util.Collections;
 public class DataSeeder {
 
     @Bean
-    CommandLineRunner initDatabase(ClienteRepository clienteRepo, DocumentoRepository documentoRepo) {
+    CommandLineRunner initDatabase(
+            ClienteRepository clienteRepo,
+            DocumentoRepository documentoRepo,
+            FuncionarioRepository funcionarioRepository,
+            PasswordEncoder passwordEncoder
+    ) {
         return args -> {
+            if (funcionarioRepository.findByEmail("admin@contrack.com").isEmpty()) {
+                Funcionario admin = Funcionario.builder()
+                        .nome("Administrador Contrack")
+                        .cpf("123.456.789-09")
+                        .email("admin@contrack.com")
+                        .senha(passwordEncoder.encode("admin123"))
+                        .role(Role.ADMIN)
+                        .build();
+                funcionarioRepository.save(admin);
+                System.out.println("--- ADMIN PADRAO CRIADO: admin@contrack.com / admin123 ---");
+            }
+
             // 1. Precisamos de um Cliente salvo antes de criar o documento
             Cliente cliente = Cliente.builder()
                     .nome("Empresa Demo Ltda")

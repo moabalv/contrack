@@ -9,4 +9,5 @@ public interface FluxogramaService {
     Fluxograma criar(FluxogramaRequestDTO dto);
     List<Fluxograma> listar();
     Fluxograma buscar(Long id);
+    Fluxograma atualizar(Long id, FluxogramaRequestDTO dto);
 }

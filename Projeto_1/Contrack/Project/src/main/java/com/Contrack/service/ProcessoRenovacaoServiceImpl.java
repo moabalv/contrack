@@ -5,7 +5,6 @@ import com.Contrack.dto.renovacao.ProcessoRenovacaoRequestDTO;
 import com.Contrack.enums.StatusEtapaRenovacao;
 import com.Contrack.enums.StatusProcessoRenovacao;
 import com.Contrack.model.Documento.Documento;
-import com.Contrack.model.Funcionario.Funcionario;
 import com.Contrack.model.renovacao.Fluxograma;
 import com.Contrack.model.renovacao.ProcessoRenovacao;
 import com.Contrack.repository.DocumentoRepository;

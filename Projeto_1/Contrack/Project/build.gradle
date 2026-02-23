@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'        // Controllers REST
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'   // JPA
     implementation 'org.springframework.boot:spring-boot-starter-validation' // @Valid
+    implementation 'org.springframework.boot:spring-boot-starter-security'   // Security + RBAC
 
     /* --- BANCO DE DADOS --- */
     runtimeOnly 'com.h2database:h2'        // H2 no runtime

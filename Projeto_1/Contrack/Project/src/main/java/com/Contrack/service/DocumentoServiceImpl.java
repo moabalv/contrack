@@ -201,4 +201,13 @@ public class DocumentoServiceImpl implements DocumentoService {
         Documento atualizado = documentoRepository.save(documento);
         return new DocumentoResponseDTO(atualizado);
     }
+
+    @Override
+    @Transactional
+    public void apagarDocumento(Long id) {
+        if (!documentoRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Documento não encontrado");
+        }
+        documentoRepository.deleteById(id);
+    }
 }

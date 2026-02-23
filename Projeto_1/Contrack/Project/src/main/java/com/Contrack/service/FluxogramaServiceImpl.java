@@ -39,4 +39,17 @@ public class FluxogramaServiceImpl implements FluxogramaService {
         return fluxogramaRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Fluxograma não encontrado"));
     }
+
+    @Override
+    @Transactional
+    public Fluxograma atualizar(Long id, FluxogramaRequestDTO dto) {
+        Fluxograma fluxograma = fluxogramaRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Fluxograma não encontrado"));
+
+        fluxograma.setNome(dto.getNome());
+        fluxograma.setDescricao(dto.getDescricao());
+        fluxograma.setEtapas(dto.getEtapas());
+
+        return fluxogramaRepository.save(fluxograma);
+    }
 }
