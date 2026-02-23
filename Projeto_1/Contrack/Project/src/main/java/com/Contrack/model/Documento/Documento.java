@@ -63,7 +63,7 @@ public abstract class Documento {
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
     
-    @Column(name = "titulo")
+    @Column(name = "titulo", nullable = true)
     private String titulo;
 
     @Enumerated(EnumType.STRING)
