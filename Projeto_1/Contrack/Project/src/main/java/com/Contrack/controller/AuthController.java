@@ -8,6 +8,8 @@ import com.Contrack.dto.Funcionario.FuncionarioResponseDTO;
 import com.Contrack.model.Funcionario.Funcionario;
 import com.Contrack.repository.FuncionarioRepository;
 import com.Contrack.service.FuncionarioService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -56,6 +59,16 @@ public class AuthController {
     @PatchMapping(value = "/alterar-senha", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> alterarSenha(@Valid @RequestBody AlterarSenhaRequestDTO dto, Authentication authentication) {
         funcionarioService.alterarSenha(authentication.getName(), dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+        if (authentication != null) {
+            new SecurityContextLogoutHandler().logout(request, response, authentication);
+        } else {
+            SecurityContextHolder.clearContext();
+        }
         return ResponseEntity.noContent().build();
     }
 }
