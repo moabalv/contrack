@@ -14,11 +14,18 @@ import com.Contrack.service.ClienteService;
         value = "/clientes",
         produces = MediaType.APPLICATION_JSON_VALUE
 )
-
+@CrossOrigin(origins = "http://localhost:5173")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> listarClientePorId(@PathVariable Long id){
+        return ResponseEntity
+            .status(HttpStatus.OK)
+            .body(clienteService.listarClienteId(id));
+    }
+    
     @GetMapping("")
     public ResponseEntity<?> listarClientes() {
         return ResponseEntity

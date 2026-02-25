@@ -49,6 +49,16 @@ public class NotificacaoServiceImpl implements NotificacaoService {
         return modelMapper.map(notificacao, NotificacaoGetResponseDTO.class);
     }
 
+    public NotificacaoGetResponseDTO marcarComoLida(Long id) {
+        Notificacao notificacao = notificacaoRepository.findById(id).orElseThrow(NotificacaoNaoExisteException::new);
+        if (!notificacao.isLido()) {
+            notificacao.setLido(true);
+            notificacao.setStatus(Status_Notificacao.RESOLVIDO);
+        }
+        return modelMapper.map(notificacaoRepository.save(notificacao), NotificacaoGetResponseDTO.class);
+    }
+}
+
 
     public NotificacaoPostResponseDTO criarNotificacao(NotificacaoPostRequestDTO notificacaoDTO) {
         Documento documento = documentoRepository.findById(notificacaoDTO.getDocumentoId())

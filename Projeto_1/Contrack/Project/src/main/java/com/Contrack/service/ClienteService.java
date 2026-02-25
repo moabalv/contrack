@@ -6,5 +6,6 @@ import java.util.List;
 
 public interface ClienteService {
     List<ClienteResponseDTO> listarClientes();
+    ClienteResponseDTO listarClienteId(Long id);
     ClienteResponseDTO criarCliente(ClientePostPutRequestDTO clienteDTO);
 }

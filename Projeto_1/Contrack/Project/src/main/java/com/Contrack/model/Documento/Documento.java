@@ -62,6 +62,9 @@ public abstract class Documento {
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
+    
+    @Column(name = "titulo", nullable = true)
+    private String titulo;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "prioridade", nullable = false)

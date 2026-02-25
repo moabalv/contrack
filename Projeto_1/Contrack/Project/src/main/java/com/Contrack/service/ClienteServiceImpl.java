@@ -4,7 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.Contrack.model.Cliente;
 import com.Contrack.repository.ClienteRepository;
@@ -22,6 +24,12 @@ public class ClienteServiceImpl implements ClienteService {
         return clientes.stream()
                 .map(ClienteResponseDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public ClienteResponseDTO listarClienteId(Long id){
+        Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Cliente não encontrado")); 
+        return new ClienteResponseDTO(cliente);
     }
 
     @Override

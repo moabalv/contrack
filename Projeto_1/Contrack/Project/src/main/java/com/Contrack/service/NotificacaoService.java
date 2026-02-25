@@ -12,6 +12,9 @@ public interface NotificacaoService {
 
     List<NotificacaoGetRequestDTO> listarNotificacoes();
     NotificacaoGetResponseDTO obterNotificacaoPorId(Long id);
+
+    NotificacaoGetResponseDTO marcarComoLida(Long id);
+
     NotificacaoPostResponseDTO criarNotificacao(NotificacaoPostRequestDTO  notificacaoDTO);
     Page<NotificacaoPostRequestDTO> notificacaoPaginada(int pagina, int tamanho);
 }
