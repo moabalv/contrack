@@ -12,14 +12,12 @@ import java.time.LocalDateTime;
 @Repository
 public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> {
 
-    
     boolean existsByDocumentoAndTituloAndDataBetween(
         Documento documento, 
         String titulo, 
         LocalDateTime dataInicio, 
         LocalDateTime dataFim
     );
-}
 
     Page<Notificacao> findAll(Pageable pageable);
 }
