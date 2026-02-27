@@ -13,4 +13,6 @@ public interface NotificacaoService {
 
     NotificacaoGetResponseDTO marcarComoLida(Long id);
 
+    List<NotificacaoGetResponseDTO> filtrarPorLido(boolean estado);
+
 }
