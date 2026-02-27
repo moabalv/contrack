@@ -33,6 +33,23 @@ public class ClienteServiceImpl implements ClienteService {
     }
 
     @Override
+    public List<ClienteResponseDTO> listarClientesPorNome(String nome) {
+        if (nome == null || nome.isBlank()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O campo nome é obrigatório");
+        }
+
+        List<Cliente> clientesEncontrados = clienteRepository.findByNomeContainingIgnoreCase(nome);
+
+        if (clientesEncontrados.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nenhum cliente encontrado");
+        }
+
+        return clientesEncontrados.stream()
+                .map(ClienteResponseDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public ClienteResponseDTO criarCliente(ClientePostPutRequestDTO clienteDTO){
         Cliente cliente = Cliente.builder()
                 .nome(clienteDTO.getNome())
