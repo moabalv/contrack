@@ -40,4 +40,13 @@ public class ClienteController {
                 .status(HttpStatus.CREATED)
                 .body(clienteService.criarCliente(clienteDTO));
     }
+
+      @GetMapping("/filtrar")
+      public ResponseEntity<?> listarClientesPorNome(
+        @RequestParam String nome
+      ) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(clienteService.listarClientesPorNome(nome));
+    }
 }
