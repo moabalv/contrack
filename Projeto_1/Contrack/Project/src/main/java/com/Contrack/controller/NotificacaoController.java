@@ -1,6 +1,7 @@
 package com.Contrack.controller;
 
 
+import com.Contrack.service.NotificacaoService;
 import com.Contrack.dto.ClientePostPutRequestDTO;
 import com.Contrack.dto.Notificacao.NotificacaoPostRequestDTO;
 import com.Contrack.service.NotificacaoService;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
@@ -56,6 +58,11 @@ public class NotificacaoController {
 
     @PostMapping("/{id}/lida")
     public ResponseEntity<?> marcarComoLida(@PathVariable Long id) {
-        return ResponseEntity.ok(notificacaoServiceImpl.marcarComoLida(id));
+        return ResponseEntity.ok(notificacaoService.marcarComoLida(id));
     }
+
+     @GetMapping("/filtrar")
+      public ResponseEntity<?> filtrarPorLido(@RequestParam(defaultValue = "true") boolean estado ) {
+        return ResponseEntity.status(HttpStatus.OK).body(notificacaoService.filtrarPorLido(estado));
+      }
 }
