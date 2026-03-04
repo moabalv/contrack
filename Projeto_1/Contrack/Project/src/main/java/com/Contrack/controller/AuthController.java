@@ -22,7 +22,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,6 +34,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final FuncionarioRepository funcionarioRepository;
     private final FuncionarioService funcionarioService;
+    // Injetado via bean declarado no SecurityConfig — mesma instância que o filtro usa.
+    private final SecurityContextRepository securityContextRepository;
 
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<LoginResponseDTO> login(
@@ -45,11 +46,13 @@ public class AuthController {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getSenha())
         );
+
         SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
         securityContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(securityContext);
 
-        SecurityContextRepository securityContextRepository = new HttpSessionSecurityContextRepository();
+        // Usa o mesmo repositório configurado no filtro chain para garantir
+        // que o contexto salvo aqui seja encontrado nas requisições seguintes.
         securityContextRepository.saveContext(securityContext, request, response);
 
         Funcionario funcionario = funcionarioRepository.findByEmail(dto.getEmail())

@@ -14,6 +14,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -25,12 +27,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    /**
+     * Exposto como bean para ser injetado no AuthController.
+     * Garante que o filtro e o controller usem EXATAMENTE o mesmo repositório,
+     * evitando que o contexto salvo no login não seja encontrado nas requisições seguintes.
+     */
+    @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
+                // Conecta explicitamente o repositório ao filtro chain.
+                // Sem isso, o Spring Security 6 pode usar um repositório diferente
+                // do que o controller usou para salvar, e o contexto nunca é encontrado.
+                .securityContext(context -> context
+                        .securityContextRepository(securityContextRepository())
+                        .requireExplicitSave(true)
+                )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/h2-console/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
@@ -38,7 +57,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/auth/logout").authenticated()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                )
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .formLogin(AbstractHttpConfigurer::disable);
 
