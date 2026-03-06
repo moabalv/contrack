@@ -6,6 +6,11 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -13,22 +18,11 @@ import org.springframework.web.server.ResponseStatusException;
 import com.Contrack.dto.Notificacao.NotificacaoGetRequestDTO;
 import com.Contrack.dto.Notificacao.NotificacaoGetResponseDTO;
 import com.Contrack.dto.Notificacao.NotificacaoPostRequestDTO;
-import com.Contrack.dto.Notificacao.NotificacaoPostResponseDTO;
-import com.Contrack.model.Documento.Documento;
-import com.Contrack.model.Setor;
-import com.Contrack.repository.DocumentoRepository;
-import com.Contrack.repository.SetorRepository;
-import jakarta.transaction.Transactional;
-import com.Contrack.enums.Status_Notificacao;
-import com.Contrack.exception.NotificacaoNaoExisteException;
+import com.Contrack.enums.Status;
 import com.Contrack.model.Notificacao;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
+import com.Contrack.repository.DocumentoRepository;
 import com.Contrack.repository.NotificacaoRepository;
-import org.springframework.web.server.ResponseStatusException;
+import com.Contrack.repository.SetorRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -45,7 +39,7 @@ public class NotificacaoServiceImpl implements NotificacaoService {
     @Autowired
     ModelMapper modelMapper;
 
-    @Override 
+    @Override
     public List<NotificacaoGetRequestDTO> listarNotificacoes() {
         return notificacaoRepository.findAll()
                 .stream()
@@ -62,51 +56,30 @@ public class NotificacaoServiceImpl implements NotificacaoService {
 
     @Override
     public NotificacaoGetResponseDTO marcarComoLida(Long id) {
-        Notificacao notificacao = notificacaoRepository.findById(id).orElseThrow(NotificacaoNaoExisteException::new);
+        Notificacao notificacao = notificacaoRepository.findById(id).
+            orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Notificação não encontrada"));
         if (!notificacao.isLido()) {
             notificacao.setLido(true);
-            notificacao.setStatus(Status_Notificacao.RESOLVIDO);
+            notificacao.setStatus(Status.RESOLVIDO);
         }
         return modelMapper.map(notificacaoRepository.save(notificacao), NotificacaoGetResponseDTO.class);
     }
 
     @Override
-    public List<NotificacaoGetResponseDTO> filtrarPorLido(boolean estado) {
-        List<Notificacao> notificacoesEncontradas = notificacaoRepository.findByLido(estado);
+    public Page<NotificacaoPostRequestDTO> filtrarPorLido(int pagina, int tamanho, boolean lido) {
+        Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by(Sort.Order.desc("data"), Sort.Order.desc("id")));
+       
+        Page<Notificacao> paginaNotificacoesFiltradas = notificacaoRepository.findByLido(pageable, lido);
 
-        if(notificacoesEncontradas.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Nenhuma notificação encontrada");
-        }
+        List<NotificacaoPostRequestDTO> notificacoesDTO = paginaNotificacoesFiltradas.getContent()
+                .stream()
+                .map(notificacao -> modelMapper.map(notificacao, NotificacaoPostRequestDTO.class))
+                .toList();
 
-       return notificacoesEncontradas.stream()
-                .map(n -> modelMapper.map(n, NotificacaoGetResponseDTO.class))
-                .collect(Collectors.toList());
-    }
-}
-
-
-    public NotificacaoPostResponseDTO criarNotificacao(NotificacaoPostRequestDTO notificacaoDTO) {
-        Documento documento = documentoRepository.findById(notificacaoDTO.getDocumentoId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Documento não encontrado"));
-
-        Setor setor = setorRepository.findById(notificacaoDTO.getSetorId())
-                .orElseThrow(() -> new ResponseStatusException( HttpStatus.NOT_FOUND, "Setor não encontrado"));
-
-        Notificacao notificacao = Notificacao.builder().
-                documento(documento).
-                setor(setor).
-                titulo(notificacaoDTO.getTitulo()).
-                descricao(notificacaoDTO.getDescricao()).
-                status(notificacaoDTO.getStatus()).
-                lido(false).
-                data(notificacaoDTO.getData()).
-                build();
-
-        Notificacao salva = notificacaoRepository.save(notificacao);
-        return modelMapper.map(salva, NotificacaoPostResponseDTO.class);
+                return new PageImpl<>(notificacoesDTO, pageable, paginaNotificacoesFiltradas.getTotalElements());
     }
 
-    //Usei PostResquest pq é o DTO que tem todos os campos da Notificação, não quis duplicar código.
+    @Override
     public Page<NotificacaoPostRequestDTO> notificacaoPaginada(int pagina, int tamanho) {
         Pageable pageable = PageRequest.of(pagina, tamanho, Sort.by(Sort.Order.desc("data"), Sort.Order.desc("id")));
 

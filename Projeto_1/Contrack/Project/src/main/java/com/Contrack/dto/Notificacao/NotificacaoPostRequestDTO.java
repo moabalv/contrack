@@ -1,16 +1,14 @@
 package com.Contrack.dto.Notificacao;
 
 
+import java.time.LocalDateTime;
+
 import com.Contrack.enums.Status;
-import com.Contrack.model.Documento.Documento;
-import com.Contrack.model.Setor;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.Data;
 import lombok.Getter;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Getter
@@ -36,5 +34,5 @@ public class NotificacaoPostRequestDTO {
 
     @JsonProperty("data")
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate data;
+    private LocalDateTime data;
 }

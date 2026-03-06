@@ -8,10 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.Contrack.model.Cliente;
-import com.Contrack.repository.ClienteRepository;
 import com.Contrack.dto.ClientePostPutRequestDTO;
 import com.Contrack.dto.ClienteResponseDTO;
+import com.Contrack.model.Cliente;
+import com.Contrack.repository.ClienteRepository;
 
 @Service
 public class ClienteServiceImpl implements ClienteService {

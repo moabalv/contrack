@@ -14,7 +14,7 @@ import com.Contrack.model.Notificacao;
 @Repository
 public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> {
 
-    List<Notificacao> findByLido(boolean estado);
+    Page<Notificacao> findByLido(Pageable pageable, boolean lido);
     
     boolean existsByDocumentoAndTituloAndDataBetween(
         Documento documento, 

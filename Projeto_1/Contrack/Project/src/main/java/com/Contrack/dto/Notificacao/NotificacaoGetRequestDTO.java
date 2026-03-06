@@ -16,7 +16,7 @@ public class NotificacaoGetRequestDTO {
 
     private Long id;
     private String titulo;
-    private String mensagem;
+    private String descricao;
     private Boolean lido;
     private String data;
 }

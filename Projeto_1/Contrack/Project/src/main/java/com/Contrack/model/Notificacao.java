@@ -1,16 +1,25 @@
 package com.Contrack.model;
 
+import java.time.LocalDateTime;
+
 import com.Contrack.enums.Status;
+import com.Contrack.model.Documento.Documento;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.Contrack.model.Documento.Documento;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -49,5 +58,5 @@ public class Notificacao {
     private boolean lido;
 
     @Column(name = "data_notificacao", nullable = false)
-    private LocalDate data;
+    private LocalDateTime data;
 }
