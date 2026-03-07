@@ -48,7 +48,7 @@ import java.util.Set;
 @SuperBuilder
 @Table(name = "Documentos")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_documento", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "tipo_documento", discriminatorType = DiscriminatorType.STRING, columnDefinition = "VARCHAR(20)")
 @EqualsAndHashCode(exclude = {"cliente", "colaboradores"})
 @ToString(exclude = {"cliente", "colaboradores"})
 public abstract class Documento {
