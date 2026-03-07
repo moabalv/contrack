@@ -1,12 +1,13 @@
 package com.Contrack.Mapper;
 
-import com.Contrack.dto.Notificacao.NotificacaoGetRequestDTO;
-import com.Contrack.dto.Notificacao.NotificacaoGetResponseDTO;
-import com.Contrack.model.Notificacao;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.time.format.DateTimeFormatter;
+import com.Contrack.dto.Notificacao.NotificacaoGetRequestDTO;
+import com.Contrack.dto.Notificacao.NotificacaoGetResponseDTO;
+import com.Contrack.model.Notificacao;
 
 // Classe que mapeia manualmente Notificacao para NotificacaoDTO.
 @Component
@@ -38,7 +39,7 @@ public class NotificacaoMapper {
         return NotificacaoGetRequestDTO.builder()
                 .id(notificacao.getId())
                 .titulo(notificacao.getTitulo())
-                .mensagem(notificacao.getMensagem())
+                .descricao(notificacao.getDescricao())
                 .lido(notificacao.isLido())
                 .data(notificacao.getData().format(DATE_FORMATTER))
                 .build();

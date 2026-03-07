@@ -1,6 +1,7 @@
 package com.Contrack.dto.Notificacao;
 
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,12 +12,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+public class NotificacaoPostResponseDTO {
 
-public class NotificacaoGetRequestDTO {
-
+    @JsonProperty("id")
+    @Id
     private Long id;
-    private String titulo;
-    private String descricao;
-    private Boolean lido;
-    private String data;
+
 }

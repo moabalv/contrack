@@ -41,8 +41,4 @@ public class Cliente {
     @JsonProperty("telefone")
     @Column(nullable = false)
     private String telefone;
-
-//0 ou mais contratos - voltar aqui depois
-    //@ManyToOne
-    //atributo de documento em Cliente?
 }

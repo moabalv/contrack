@@ -1,7 +1,7 @@
 package com.Contrack.service;
 
-import com.Contrack.enums.Status_Notificacao;
 import com.Contrack.model.Documento.Documento;
+import com.Contrack.enums.Status;
 import com.Contrack.model.Notificacao;
 import com.Contrack.repository.DocumentoRepository;
 import com.Contrack.repository.NotificacaoRepository;
@@ -94,8 +94,8 @@ public class NotificacaoScheduler {
                 .documento(doc)
                 .setor(null) // ou null, conforme sua lógica
                 .titulo(titulo)
-                .mensagem(mensagemDetalhada)
-                .status(Status_Notificacao.PENDENTE)
+                .descricao(mensagemDetalhada)
+                .status(Status.PENDENTE)
                 .lido(false)
                 .data(LocalDateTime.now()) // Data de criação da notificação é AGORA
                 .build();
