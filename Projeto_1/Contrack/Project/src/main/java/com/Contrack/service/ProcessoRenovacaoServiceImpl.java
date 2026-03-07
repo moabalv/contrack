@@ -105,7 +105,7 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
         if (processos.isEmpty()) {
             return null;
         }
-    return processos.get(0); 
+    return processos.get(processos.size() - 1); 
     }
 
     private void atualizarStatusProcesso(ProcessoRenovacao processo, boolean etapaAtrasada) {
