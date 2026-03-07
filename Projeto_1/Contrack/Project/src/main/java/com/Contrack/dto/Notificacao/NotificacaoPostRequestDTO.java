@@ -14,6 +14,9 @@ import lombok.Getter;
 @Getter
 public class NotificacaoPostRequestDTO {
 
+    @JsonProperty("id")
+    private Long id;
+    
     @JsonProperty("documentoId")
     private Long documentoId;
 
