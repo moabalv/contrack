@@ -42,10 +42,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
-                .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))
-                // Conecta explicitamente o repositório ao filtro chain.
-                // Sem isso, o Spring Security 6 pode usar um repositório diferente
-                // do que o controller usou para salvar, e o contexto nunca é encontrado.
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
                 .securityContext(context -> context
                         .securityContextRepository(securityContextRepository())
                         .requireExplicitSave(true)
