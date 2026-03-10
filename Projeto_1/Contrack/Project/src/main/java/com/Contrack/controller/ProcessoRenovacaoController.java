@@ -1,8 +1,8 @@
 package com.Contrack.controller;
 
 import com.Contrack.dto.renovacao.ConclusaoEtapaDTO;
+import com.Contrack.dto.renovacao.ProcessoRenovacaoDTO;
 import com.Contrack.dto.renovacao.ProcessoRenovacaoRequestDTO;
-import com.Contrack.model.renovacao.ProcessoRenovacao;
 import com.Contrack.service.ProcessoRenovacaoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,7 +36,7 @@ public class ProcessoRenovacaoController {
 
     @GetMapping("/documento/{id}")
     public ResponseEntity<?> buscarPorDocumento(@PathVariable Long id) {
-        ProcessoRenovacao processo = processoRenovacaoService.buscarPorDocumento(id);
+        ProcessoRenovacaoDTO processo = processoRenovacaoService.buscarPorDocumento(id);
     
         if (processo == null) {
             return ResponseEntity.noContent().build();

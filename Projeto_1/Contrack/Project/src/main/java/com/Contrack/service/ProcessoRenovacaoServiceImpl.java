@@ -1,6 +1,7 @@
 package com.Contrack.service;
 
 import com.Contrack.dto.renovacao.ConclusaoEtapaDTO;
+import com.Contrack.dto.renovacao.ProcessoRenovacaoDTO;
 import com.Contrack.dto.renovacao.ProcessoRenovacaoRequestDTO;
 import com.Contrack.enums.StatusEtapaRenovacao;
 import com.Contrack.enums.StatusProcessoRenovacao;
@@ -11,6 +12,7 @@ import com.Contrack.repository.DocumentoRepository;
 import com.Contrack.repository.FuncionarioRepository;
 import com.Contrack.repository.FluxogramaRepository;
 import com.Contrack.repository.ProcessoRenovacaoRepository;
+import com.Contrack.Mapper.ProcessoRenovacaoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +28,10 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
     private final ProcessoRenovacaoRepository processoRenovacaoRepository;
     private final FluxogramaRepository fluxogramaRepository;
     private final DocumentoRepository documentoRepository;
-    private final FuncionarioRepository funcionarioRepository;
 
     @Override
     @Transactional
-    public ProcessoRenovacao criar(ProcessoRenovacaoRequestDTO dto) {
+    public ProcessoRenovacaoDTO criar(ProcessoRenovacaoRequestDTO dto) {
         Documento contrato = documentoRepository.findById(dto.getDocumentoId())
                 .orElseThrow(() -> new IllegalArgumentException("Contrato não encontrado"));
         Fluxograma fluxograma = fluxogramaRepository.findById(dto.getFluxogramaId())
@@ -54,13 +55,15 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
                         .collect(Collectors.toList())
         );
 
-        return processoRenovacaoRepository.save(processo);
+        ProcessoRenovacao salvo = processoRenovacaoRepository.save(processo);
+
+        return ProcessoRenovacaoMapper.toDTO(salvo);
     }
 
     @Override
     @Transactional
-    public ProcessoRenovacao concluirEtapaAtual(Long processoId, ConclusaoEtapaDTO dto) {
-        ProcessoRenovacao processo = buscar(processoId);
+    public ProcessoRenovacaoDTO concluirEtapaAtual(Long processoId, ConclusaoEtapaDTO dto) {
+        ProcessoRenovacao processo = buscarEntidade(processoId);
         List<ProcessoRenovacao.EtapaExecucao> etapas = processo.getEtapas();
 
         if (processo.getIndiceEtapaAtual() >= etapas.size()) {
@@ -81,31 +84,38 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
         processo.setIndiceEtapaAtual(proximoIndice);
 
         atualizarStatusProcesso(processo, marcarAtrasada);
-        return processoRenovacaoRepository.save(processo);
+
+        ProcessoRenovacao salvo = processoRenovacaoRepository.save(processo);
+        return ProcessoRenovacaoMapper.toDTO(salvo);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<ProcessoRenovacao> listar() {
-        return processoRenovacaoRepository.findAll();
+    public List<ProcessoRenovacaoDTO> listar() {
+
+        return processoRenovacaoRepository.findAll()
+                .stream()
+                .map(ProcessoRenovacaoMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProcessoRenovacao buscar(Long id) {
-        return processoRenovacaoRepository.findById(id)
+    public ProcessoRenovacaoDTO buscar(Long id) {
+        ProcessoRenovacao p = processoRenovacaoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Processo não encontrado"));
+        return ProcessoRenovacaoMapper.toDTO(p);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public ProcessoRenovacao buscarPorDocumento(Long id) {
+    public ProcessoRenovacaoDTO buscarPorDocumento(Long id) {
         List<ProcessoRenovacao> processos = processoRenovacaoRepository.findAllByContratoId(id);
         
         if (processos.isEmpty()) {
             return null;
         }
-    return processos.get(processos.size() - 1); 
+        return ProcessoRenovacaoMapper.toDTO(processos.get(processos.size() - 1)); 
     }
 
     private void atualizarStatusProcesso(ProcessoRenovacao processo, boolean etapaAtrasada) {
@@ -121,5 +131,10 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
             processo.setStatus(StatusProcessoRenovacao.EM_ANDAMENTO);
             processo.setDataFim(null);
         }
+    }
+    private ProcessoRenovacao buscarEntidade(Long id) {
+
+        return processoRenovacaoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Processo não encontrado"));
     }
 }
