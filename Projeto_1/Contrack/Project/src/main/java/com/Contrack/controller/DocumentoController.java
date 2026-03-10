@@ -2,6 +2,8 @@ package com.Contrack.controller;
 
 import com.Contrack.dto.DocumentoRequestDTO;
 import com.Contrack.service.DocumentoService;
+
+import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,10 +29,15 @@ public class DocumentoController {
     private final DocumentoService documentoService;
 
     @GetMapping("")
-    public ResponseEntity<?> listarDocumentos() {
+    public ResponseEntity<?> listarDocumentos(@Parameter(
+                description = "Critério de ordenação dos documentos",
+                example = "prazo | tipo"
+        )
+            @RequestParam(required = false) String ordenarPor) {
+
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(documentoService.listarDocumentos());
+                .body(documentoService.listarDocumentos(ordenarPor));
     }
 
     @GetMapping("/{id}")

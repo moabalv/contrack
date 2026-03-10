@@ -46,11 +46,40 @@ public class DocumentoServiceImpl implements DocumentoService {
 
     @Override
     @Transactional
-    public List<DocumentoResponseDTO> listarDocumentos() {
+    public List<DocumentoResponseDTO> listarDocumentos(String ordenarPor) {
+
         LocalDate hoje = LocalDate.now();
-        return documentoRepository.findAll()
-                .stream()
-                .peek(documento -> documento.atualizarStatus(hoje))
+
+        List<Documento> documentos = documentoRepository.findAll();
+
+        documentos.forEach(doc -> doc.atualizarStatus(hoje));
+
+        if (ordenarPor != null) {
+            switch (ordenarPor.toLowerCase()) {
+                case "prazo":
+                    documentos = documentos.stream()
+                            .sorted((d1, d2) -> d1.getDataVencimento()
+                                    .compareTo(d2.getDataVencimento()))
+                            .collect(Collectors.toList());
+                    break;
+
+                case "tipo":
+                    documentos = documentos.stream()
+                            .sorted((d1, d2) -> d1.getTipoDocumento()
+                                    .name()
+                                    .compareTo(d2.getTipoDocumento().name()))
+                            .collect(Collectors.toList());
+                    break;
+
+                default:
+                    throw new ResponseStatusException(
+                            HttpStatus.BAD_REQUEST,
+                            "Ordenação inválida. Use 'prazo' ou 'tipo'."
+                    );
+            }
+        }
+
+        return documentos.stream()
                 .map(DocumentoResponseDTO::new)
                 .collect(Collectors.toList());
     }
