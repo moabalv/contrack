@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 import com.Contrack.dto.ClientePostPutRequestDTO;
 import com.Contrack.service.ClienteService;
 
+import io.swagger.v3.oas.annotations.Parameter;
+
 @RestController
 @RequestMapping(
         value = "/clientes",
@@ -27,10 +29,13 @@ public class ClienteController {
     }
     
     @GetMapping("")
-    public ResponseEntity<?> listarClientes() {
+    public ResponseEntity<?> listarClientes(@Parameter(
+                description = "Critério de ordenação dos documentos",
+                example = "nome"
+        )@RequestParam(required = false) String ordenarPor) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(clienteService.listarClientes());
+                .body(clienteService.listarClientes(ordenarPor));
     }
 
     @PostMapping("")
