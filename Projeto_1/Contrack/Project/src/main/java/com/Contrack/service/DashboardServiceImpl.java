@@ -6,9 +6,11 @@ import org.springframework.stereotype.Service;
 import com.Contrack.dto.Dashboard.DashboardResponseDTO;
 import com.Contrack.dto.Dashboard.DocumentoDashboardResponseDTO;
 import com.Contrack.dto.Dashboard.FluxogramaDashboardResponseDTO;
+import com.Contrack.dto.Dashboard.FuncionarioDashboardResponseDTO;
 import com.Contrack.repository.ClienteRepository;
 import com.Contrack.repository.DocumentoRepository;
 import com.Contrack.repository.FluxogramaRepository;
+import com.Contrack.repository.FuncionarioRepository;
 import com.Contrack.enums.StatusDocumento;
 
 @Service
@@ -20,6 +22,9 @@ public class DashboardServiceImpl implements DashboardService {
 
     @Autowired
     private FluxogramaRepository fluxogramaRepository;
+
+    @Autowired
+    private FuncionarioRepository funcionarioRepository;
     
     public DashboardResponseDTO getDashboardInfo() {
         long totalDocumentos = documentoRepository.count();
@@ -39,6 +44,8 @@ public class DashboardServiceImpl implements DashboardService {
                 .stream()
                 .map(FluxogramaDashboardResponseDTO::new)
                 .toList());
+        
+        dashboardInfo.setFuncionarios(funcionarioRepository.findAll().stream().map(FuncionarioDashboardResponseDTO::new).toList());
                 
         return dashboardInfo;
     }

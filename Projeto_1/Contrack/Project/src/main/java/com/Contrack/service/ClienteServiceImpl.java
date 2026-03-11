@@ -1,5 +1,6 @@
 package com.Contrack.service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +20,16 @@ public class ClienteServiceImpl implements ClienteService {
     ClienteRepository clienteRepository;
 
     @Override
-    public List<ClienteResponseDTO> listarClientes() {
+    public List<ClienteResponseDTO> listarClientes(String ordenarPor) {
+
         List<Cliente> clientes = clienteRepository.findAll();
+
+        if (ordenarPor != null && ordenarPor.equalsIgnoreCase("nome")) {
+            clientes = clientes.stream()
+                    .sorted(Comparator.comparing(Cliente::getNome))
+                    .collect(Collectors.toList());
+        }
+
         return clientes.stream()
                 .map(ClienteResponseDTO::new)
                 .collect(Collectors.toList());

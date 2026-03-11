@@ -5,7 +5,7 @@ import com.Contrack.dto.ClienteResponseDTO;
 import java.util.List;
 
 public interface ClienteService {
-    List<ClienteResponseDTO> listarClientes();
+    List<ClienteResponseDTO> listarClientes(String ordenarPor);
     ClienteResponseDTO listarClienteId(Long id);
     ClienteResponseDTO criarCliente(ClientePostPutRequestDTO clienteDTO);
     List<ClienteResponseDTO> listarClientesPorNome(String nome);

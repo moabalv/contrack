@@ -24,4 +24,7 @@ public class DashboardResponseDTO {
 
     @JsonProperty("fluxogramas")
     List<FluxogramaDashboardResponseDTO> fluxogramas;
+
+    @JsonProperty("funcionarios")
+    List<FuncionarioDashboardResponseDTO> funcionarios;
 }

@@ -52,4 +52,8 @@ public class Funcionario {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "setor_id")
     private Setor setor;
+
+    @Lob
+    @Column(name = "foto")
+    private byte[] foto;
 }
