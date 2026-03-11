@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -83,6 +84,27 @@ public class FuncionarioServiceImpl implements FuncionarioService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Funcionário não encontrado");
         }
         funcionarioRepository.deleteById(id);
+    }
+
+    @Override
+    public void salvarFoto(Long id, MultipartFile file) {
+        Funcionario funcionario = funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+
+        try {
+            funcionario.setFoto(file.getBytes());
+            funcionarioRepository.save(funcionario);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao salvar foto");
+        }
+    }
+
+    @Override
+    public byte[] buscarFoto(Long id) {
+        Funcionario funcionario = funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+
+        return funcionario.getFoto();
     }
 
     private Role resolverRole(String role) {
