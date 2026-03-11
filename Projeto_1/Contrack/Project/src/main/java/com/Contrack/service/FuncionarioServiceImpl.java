@@ -3,6 +3,7 @@ package com.Contrack.service;
 import com.Contrack.dto.Auth.AlterarSenhaRequestDTO;
 import com.Contrack.dto.Funcionario.FuncionarioRequestDTO;
 import com.Contrack.dto.Funcionario.FuncionarioResponseDTO;
+import com.Contrack.dto.Funcionario.FuncionarioUpdateNomeDTO;
 import com.Contrack.enums.Role;
 import com.Contrack.model.Funcionario.Funcionario;
 import com.Contrack.repository.FuncionarioRepository;
@@ -97,6 +98,20 @@ public class FuncionarioServiceImpl implements FuncionarioService {
         } catch (Exception e) {
             throw new RuntimeException("Erro ao salvar foto");
         }
+    }
+
+    @Override
+    @Transactional
+    public FuncionarioResponseDTO atualizarNome(Long id, FuncionarioUpdateNomeDTO dto) {
+
+        Funcionario funcionario = funcionarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Funcionário não encontrado"));
+
+        funcionario.setNome(dto.getNome());
+
+        Funcionario atualizado = funcionarioRepository.save(funcionario);
+
+        return new FuncionarioResponseDTO(atualizado);
     }
 
     @Override

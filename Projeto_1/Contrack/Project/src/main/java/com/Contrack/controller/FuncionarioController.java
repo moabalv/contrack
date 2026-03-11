@@ -1,6 +1,8 @@
 package com.Contrack.controller;
 
 import com.Contrack.dto.Funcionario.FuncionarioRequestDTO;
+import com.Contrack.dto.Funcionario.FuncionarioResponseDTO;
+import com.Contrack.dto.Funcionario.FuncionarioUpdateNomeDTO;
 import com.Contrack.service.FuncionarioService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -67,5 +69,14 @@ public class FuncionarioController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=foto.jpg")
                 .body(foto);
+    }
+
+    @PatchMapping("/{id}/nome")
+    @Operation(summary = "Atualizar nome do funcionário")
+    public ResponseEntity<FuncionarioResponseDTO> atualizarNome(
+            @PathVariable Long id,
+            @Valid @RequestBody FuncionarioUpdateNomeDTO dto) {
+
+        return ResponseEntity.ok(funcionarioService.atualizarNome(id, dto));
     }
 }
