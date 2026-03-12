@@ -115,7 +115,13 @@ public class ProcessoRenovacaoServiceImpl implements ProcessoRenovacaoService {
         if (processos.isEmpty()) {
             return null;
         }
-        return ProcessoRenovacaoMapper.toDTO(processos.get(processos.size() - 1)); 
+
+        ProcessoRenovacao p = processos.get(processos.size() - 1);
+
+        if (p.getStatus() == StatusProcessoRenovacao.CONCLUIDO){
+            return null;
+        }
+        return ProcessoRenovacaoMapper.toDTO(p); 
     }
 
     private void atualizarStatusProcesso(ProcessoRenovacao processo, boolean etapaAtrasada) {
