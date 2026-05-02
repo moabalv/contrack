@@ -40,7 +40,6 @@ public class NotificacaoMapper {
                 .id(notificacao.getId())
                 .titulo(notificacao.getTitulo())
                 .descricao(notificacao.getDescricao())
-                .lido(notificacao.isLido())
                 .data(notificacao.getData().format(DATE_FORMATTER))
                 .build();
     }

@@ -54,9 +54,6 @@ public class Notificacao {
     @Column(nullable = false)
     private Status status;
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    private boolean lido;
-
     @Column(name = "data_notificacao", nullable = false)
     private LocalDateTime data;
 }

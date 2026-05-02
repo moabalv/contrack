@@ -16,6 +16,7 @@ public class NotificacaoGetResponseDTO {
     private Long id;
     private String titulo;
     private String data;
+    private Boolean lido;
 
     private DocumentoResponseDTO documento;
 }
