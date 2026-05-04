@@ -15,5 +15,6 @@ public class EmailNotificacaoDTO {
     private String nomeColaborador;
     private String nomeCliente;
     private String textoTempo;
+    private Long idCliente;
     private Long idDocumento;
 }

@@ -103,7 +103,7 @@ public class NotificacaoScheduler {
 
         notificacaoRepository.save(notificacao);
 
-        emailService.enviarNotificacaoDocumento(doc, titulo, notificacao.getDescricao()); // Email enviado
+        emailService.enviarNotificacaoDocumento(doc, titulo, textoTempo); // Email enviado
 
         log.info("Notificação gerada: '{}' para documento ID {}", titulo, doc.getId());
     }

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import com.Contrack.dto.Notificacao.EmailNotificacaoDTO;
 import com.Contrack.model.Documento.Documento;
 import com.Contrack.model.Funcionario.Funcionario;
+import com.Contrack.repository.FuncionarioRepository;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
@@ -26,20 +27,24 @@ public class EmailService {
     
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
+    private final FuncionarioRepository funcionarioRepository;
 
 
-     @Value("${spring.mail.username}")
+    @Value("${app.mail.remetente}")
     private String remetente;
 
-       @Async
+    @Async
     public void enviarNotificacaoDocumento(Documento doc, String titulo, String textoTempo) {
 
-        if (doc.getColaboradores() == null || doc.getColaboradores().isEmpty()) {
-            log.warn("Nenhum colaborador encontrado para o documento ID {}", doc.getId());
+
+        List<Funcionario> funcionarios = funcionarioRepository.findAll();
+
+        if (funcionarios.isEmpty()) {
+            log.warn("Nenhum funcionário cadastrado no sistema para notificar.");
             return;
         }
 
-        for (Funcionario funcionario : doc.getColaboradores()) {
+        for (Funcionario funcionario : funcionarios) {
             String email = funcionario.getEmail();
 
             if (email == null || email.isBlank()) {
@@ -49,10 +54,11 @@ public class EmailService {
 
             try {
                 EmailNotificacaoDTO dados = new EmailNotificacaoDTO(
+                    titulo,
                     funcionario.getNome(),
                     doc.getCliente().getNome(),
-                    titulo,
                     textoTempo,
+                    doc.getCliente().getId(),
                     doc.getId()
                 );
 
@@ -72,7 +78,9 @@ public class EmailService {
         context.setVariable("nomeCliente", dados.getNomeCliente());
         context.setVariable("titulo", dados.getTitulo());
         context.setVariable("textoTempo", dados.getTextoTempo());
-        return templateEngine.process("email/notificacao", context);
+        context.setVariable("idCliente", dados.getIdCliente());
+        context.setVariable("idDocumento", dados.getIdDocumento());
+        return templateEngine.process("email/template", context);
     }
 
     private void enviarEmail(String destinatario, String assunto, String html) throws MessagingException {
