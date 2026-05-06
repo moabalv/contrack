@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contrack – Pitch</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --brand-dark:   #4A2366;
+    --brand-mid:    #840CD9;
+    --brand-light:  #843EB6;
+    --brand-focus:  #8B2CF5;
+    --bg:           #0D0714;
+    --surface:      #160D22;
+    --border:       rgba(132,12,217,0.22);
+    --border-soft:  rgba(132,62,182,0.15);
+    --white:        #F9FAFB;
+    --muted:        #8F8F8F;
+    --muted-light:  #B9B9B9;
+    --ok:     #048600;
+    --warn:   #FFD43B;
+    --danger: #A70000;
+  }
+
+  html, body {
+    width: 100%;
+    min-height: 100%;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+    overflow: hidden; position: relative; cursor: pointer;
+  }
+  body::after {
+    content:''; position:absolute; inset:0; z-index:200; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity:0.3;
+  }
+
+  /* BACKGROUND */
+  .mesh { position:absolute; inset:0; z-index:0; overflow:hidden; }
+  .orb  { position:absolute; border-radius:50%; filter:blur(100px); pointer-events:none; }
+  .orb-a { width:650px; height:650px; background:#4A2366; opacity:0.38; top:-200px; left:-180px; }
+  .orb-b { width:520px; height:520px; background:#840CD9; opacity:0.16; bottom:-200px; right:-140px; }
+  .orb-c { width:280px; height:280px; background:#8B2CF5; opacity:0.10; top:50%; left:55%; transform:translate(-50%,-50%); }
+  .grid  {
+    position:absolute; inset:0; z-index:0;
+    background-image: linear-gradient(rgba(132,12,217,0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(132,12,217,0.05) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+
+  /* LOGO */
+  .logo { position:absolute; top:28px; left:40px; z-index:100; display:flex; align-items:center; gap:10px; }
+  .logo-icon {
+    width:32px; height:32px; border-radius:8px;
+    background:linear-gradient(135deg,var(--brand-mid),var(--brand-focus));
+    display:flex; align-items:center; justify-content:center; font-size:16px;
+    box-shadow:0 0 20px rgba(132,12,217,0.5);
+  }
+  .logo-text { font-family:'Syne',sans-serif; font-weight:800; font-size:18px; letter-spacing:1px; }
+
+  /* PROGRESS */
+  .prog-track { position:absolute; bottom:0; left:0; right:0; height:3px; background:rgba(132,12,217,0.15); z-index:100; }
+  .prog-fill  { height:100%; background:linear-gradient(90deg,var(--brand-dark),var(--brand-mid),var(--brand-focus)); box-shadow:0 0 14px rgba(139,44,245,0.7); transition:width 0.1s linear; width:0%; }
+
+  /* DOTS */
+  .dots { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:100; }
+  .dot  { width:6px; height:6px; border-radius:3px; background:rgba(132,12,217,0.3); transition:all 0.3s; }
+  .dot.active { width:20px; background:linear-gradient(90deg,var(--brand-mid),var(--brand-focus)); box-shadow:0 0 8px rgba(139,44,245,0.6); }
+
+  /* SLIDES */
+  .slide { position:absolute; inset:0; z-index:1; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.7s ease; }
+  .slide.active { opacity:1; pointer-events:all; }
+
+  /* REUSABLES */
+  .lbl { font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--brand-light); font-weight:600; margin-bottom:14px; }
+  .h2  { font-family:'Syne',sans-serif; font-size:46px; font-weight:800; line-height:1.1; margin-bottom:18px; }
+  .bod { font-size:16px; color:var(--muted-light); line-height:1.7; }
+  .grad-text { background:linear-gradient(90deg,var(--brand-mid),var(--brand-focus)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeIn { from{opacity:0} to{opacity:1} }
+  @keyframes pulse  { 0%,100%{box-shadow:0 0 0 0 rgba(167,0,0,0.5)} 60%{box-shadow:0 0 0 10px rgba(167,0,0,0)} }
+
+  /* ═══════════════════════════════════
+     SLIDE 1 — GANCHO / CUSTO DO PROBLEMA
+  ═══════════════════════════════════ */
+  #s1 .inner { display:flex; flex-direction:column; align-items:center; text-align:center; gap:0; }
+  #s1 .eyebrow { font-size:12px; letter-spacing:5px; text-transform:uppercase; color:var(--brand-light); margin-bottom:22px; animation:fadeUp 0.7s 0.1s both; }
+  #s1 .big {
+    font-family:'Syne',sans-serif; font-size:88px; font-weight:800;
+    line-height:0.92; letter-spacing:-4px; margin-bottom:26px;
+    animation:fadeUp 0.7s 0.25s both;
+  }
+  #s1 .big .w  { background:linear-gradient(135deg,#fff 20%,#C07EF0); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  #s1 .big .r  { color:var(--danger); }
+  #s1 .sub { font-size:19px; color:var(--muted-light); max-width:620px; line-height:1.6; animation:fadeUp 0.7s 0.42s both; margin-bottom:36px; }
+  #s1 .cost-row { display:flex; gap:16px; animation:fadeUp 0.7s 0.58s both; }
+  .cost-card {
+    background:rgba(167,0,0,0.10); border:1px solid rgba(167,0,0,0.3);
+    border-radius:14px; padding:16px 22px;
+    display:flex; align-items:center; gap:12px; font-size:14px; color:#FFA3A3;
+  }
+  .cost-card .ic { font-size:22px; }
+  .cost-card strong { color:#fff; display:block; font-size:13px; margin-bottom:2px; }
+
+  /* ═══════════════════════════════════
+     SLIDE 2 — POR QUE PRECISA DO CONTRACK
+  ═══════════════════════════════════ */
+  #s2 .inner { display:grid; grid-template-columns:1fr 1fr; gap:72px; align-items:center; padding:0 80px; width:100%; }
+  #s2 .lbl { animation:fadeUp 0.5s 0.1s both; }
+  #s2 .h2  { animation:fadeUp 0.5s 0.2s both; }
+  #s2 .bod { animation:fadeUp 0.5s 0.35s both; }
+  .need-list { display:flex; flex-direction:column; gap:14px; }
+  .need-item {
+    display:flex; align-items:center; gap:14px;
+    background:var(--surface); border:1px solid var(--border-soft);
+    border-radius:12px; padding:16px 20px;
+  }
+  .need-item:nth-child(1) { animation:fadeUp 0.5s 0.25s both; }
+  .need-item:nth-child(2) { animation:fadeUp 0.5s 0.38s both; }
+  .need-item:nth-child(3) { animation:fadeUp 0.5s 0.51s both; }
+  .need-item:nth-child(4) { animation:fadeUp 0.5s 0.64s both; }
+  .need-check {
+    width:28px; height:28px; flex-shrink:0; border-radius:50%;
+    background:rgba(4,134,0,0.2); border:1px solid rgba(4,134,0,0.5);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:#66FF62;
+  }
+  .need-text { font-size:14px; color:var(--muted-light); line-height:1.45; }
+  .need-text strong { color:var(--white); display:block; margin-bottom:2px; font-size:15px; }
+
+  /* ═══════════════════════════════════
+     SLIDE 3 — DEMO
+  ═══════════════════════════════════ */
+  #s3 .inner { display:grid; grid-template-columns:1fr 1.2fr; gap:52px; align-items:center; padding:0 60px; width:100%; }
+  #s3 .lbl { animation:fadeUp 0.5s 0.1s both; }
+  #s3 .h2  { font-size:40px; animation:fadeUp 0.5s 0.2s both; }
+  #s3 .bod { font-size:15px; animation:fadeUp 0.5s 0.35s both; margin-bottom:20px; }
+
+  .check-list { display:flex; flex-direction:column; gap:9px; animation:fadeUp 0.5s 0.5s both; }
+  .check-row  { display:flex; align-items:center; gap:10px; font-size:14px; color:var(--muted-light); }
+  .check-dot  { width:8px; height:8px; background:#048600; border-radius:50%; flex-shrink:0; box-shadow:0 0 8px #048600; }
+
+  .vfw { position:relative; animation:fadeIn 0.8s 0.4s both; }
+  .vfw::before {
+    content:''; position:absolute; inset:-2px; border-radius:20px;
+    background:linear-gradient(135deg,var(--brand-mid),var(--brand-focus),var(--brand-dark));
+    z-index:-1; filter:blur(14px); opacity:0.65;
+  }
+  .vf {
+    background:#000; border:2px solid rgba(132,12,217,0.45);
+    border-radius:18px; overflow:hidden;
+    box-shadow:0 20px 60px rgba(0,0,0,0.6),0 0 40px rgba(132,12,217,0.18);
+  }
+  .vc {
+    background:#1A0E2E; border-bottom:1px solid rgba(132,12,217,0.2);
+    padding:9px 16px; display:flex; align-items:center; gap:7px;
+  }
+  .cd { width:9px; height:9px; border-radius:50%; }
+  .cd:nth-child(1){background:#FF5F57;} .cd:nth-child(2){background:#FEBC2E;} .cd:nth-child(3){background:#28C840;}
+  .curl { margin-left:12px; flex:1; background:rgba(132,12,217,0.1); border:1px solid rgba(132,12,217,0.2); border-radius:6px; padding:4px 12px; font-size:11px; color:var(--muted); }
+  .ftag {
+    position:absolute; top:-12px; right:20px;
+    background:linear-gradient(90deg,var(--brand-mid),var(--brand-focus));
+    color:#fff; font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+    padding:4px 12px; border-radius:20px; box-shadow:0 4px 16px rgba(132,12,217,0.5);
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 4 — CONTRACK VS CONCORRENTES
+  ═══════════════════════════════════ */
+  #s4 .inner { display:flex; flex-direction:column; gap:24px; padding:0 72px; width:100%; }
+  #s4 .lbl { animation:fadeUp 0.5s 0.05s both; }
+  #s4 .h2  { font-size:40px; margin-bottom:0; animation:fadeUp 0.5s 0.15s both; }
+
+  .compare-table { width:100%; border-collapse:collapse; animation:fadeUp 0.5s 0.3s both; }
+  .compare-table th {
+    font-size:12px; letter-spacing:2px; text-transform:uppercase; color:var(--muted);
+    font-weight:600; padding:10px 16px; text-align:left; border-bottom:1px solid var(--border-soft);
+  }
+  .compare-table th.hl { color:var(--brand-light); }
+  .compare-table td { padding:11px 16px; font-size:14px; border-bottom:1px solid rgba(132,12,217,0.08); }
+  .compare-table tr:last-child td { border-bottom:none; }
+  .compare-table .feat-col { color:var(--muted-light); font-size:13px; }
+  .compare-table .contrack-col {
+    background:rgba(132,12,217,0.07); border-left:2px solid rgba(132,12,217,0.3);
+    font-weight:600; color:var(--white);
+  }
+  .compare-table .other-col { color:var(--muted); }
+  .yes  { color:#66FF62; }
+  .no   { color:#FF6B6B; }
+  .par  { color:var(--warn); }
+  .badge-contrack {
+    background:linear-gradient(90deg,var(--brand-mid),var(--brand-focus));
+    color:#fff; font-size:10px; font-weight:700; letter-spacing:1px;
+    padding:3px 10px; border-radius:20px; margin-left:6px; vertical-align:middle;
+  }
+
+  /* ═══════════════════════════════════
+     SLIDE 5 — POR QUE NOS CONTRATAR + CTA
+  ═══════════════════════════════════ */
+  #s5 .inner { display:grid; grid-template-columns:1fr 1fr; gap:64px; align-items:center; padding:0 80px; width:100%; }
+  #s5 .lbl { animation:fadeUp 0.5s 0.05s both; }
+  #s5 .h2  { font-size:42px; margin-bottom:16px; animation:fadeUp 0.5s 0.15s both; }
+  #s5 .bod { animation:fadeUp 0.5s 0.3s both; margin-bottom:28px; }
+
+  .hire-list { display:flex; flex-direction:column; gap:13px; }
+  .hire-item {
+    display:flex; align-items:flex-start; gap:14px;
+    background:var(--surface); border:1px solid var(--border-soft);
+    border-left:3px solid var(--brand-mid);
+    border-radius:0 12px 12px 0; padding:14px 18px;
+  }
+  .hire-item:nth-child(1) { animation:fadeUp 0.5s 0.2s both; }
+  .hire-item:nth-child(2) { animation:fadeUp 0.5s 0.34s both; }
+  .hire-item:nth-child(3) { animation:fadeUp 0.5s 0.48s both; }
+  .hire-item:nth-child(4) { animation:fadeUp 0.5s 0.62s both; }
+  .hire-num {
+    font-family:'Syne',sans-serif; font-size:22px; font-weight:800;
+    background:linear-gradient(135deg,var(--brand-mid),var(--brand-focus));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    flex-shrink:0; min-width:28px;
+  }
+  .hire-text { font-size:14px; color:var(--muted-light); line-height:1.5; }
+  .hire-text strong { color:var(--white); display:block; margin-bottom:2px; }
+
+  .cta-box {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:20px; padding:36px 32px;
+    display:flex; flex-direction:column; gap:20px; align-items:flex-start;
+    animation:fadeUp 0.5s 0.25s both;
+    position:relative; overflow:hidden;
+  }
+  .cta-box::before {
+    content:''; position:absolute; top:0; left:0; right:0; height:2px;
+    background:linear-gradient(90deg,var(--brand-mid),var(--brand-focus));
+  }
+  .cta-title { font-family:'Syne',sans-serif; font-size:26px; font-weight:800; line-height:1.2; }
+  .cta-url {
+    font-size:13px; color:var(--brand-light); background:rgba(132,12,217,0.1);
+    border:1px solid var(--border); padding:10px 20px; border-radius:8px;
+    letter-spacing:1px; width:100%; text-align:center;
+  }
+  .stat-row { display:flex; gap:0; width:100%; border:1px solid var(--border-soft); border-radius:12px; overflow:hidden; }
+  .stat-box { flex:1; text-align:center; padding:14px 10px; border-right:1px solid var(--border-soft); }
+  .stat-box:last-child { border-right:none; }
+  .stat-n {
+    font-family:'Syne',sans-serif; font-size:28px; font-weight:800;
+    background:linear-gradient(135deg,var(--brand-light),var(--brand-focus));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    display:block;
+  }
+  .stat-l { font-size:11px; color:var(--muted); letter-spacing:0.5px; }
+</style>
+</head>
+<body>
+
+<div class="mesh">
+  <div class="orb orb-a"></div>
+  <div class="orb orb-b"></div>
+  <div class="orb orb-c"></div>
+</div>
+<div class="grid"></div>
+
+<div class="logo">
+  <div class="logo-icon">📋</div>
+  <span class="logo-text">Contrack</span>
+</div>
+<div class="prog-track"><div class="prog-fill" id="pf"></div></div>
+<div class="dots" id="dots"></div>
+
+<!-- ══ SLIDE 1 — GANCHO ══ -->
+<div class="slide active" id="s1">
+  <div class="inner">
+    <div class="eyebrow">Você já perdeu um prazo importante?</div>
+    <div class="big">
+      <span class="w">Um prazo</span><br>
+      <span class="r">perdido.</span><br>
+      <span class="w">Prejuízo</span> <span class="r">certo.</span>
+    </div>
+    <div class="sub">Escritórios contábeis gerenciam centenas de documentos com vencimentos diferentes. Sem controle, um único prazo perdido pode custar multas, clientes e reputação.</div>
+    <div class="cost-row">
+      <div class="cost-card"><span class="ic">💸</span><div><strong>Multas e penalidades</strong>por vencimento não renovado</div></div>
+      <div class="cost-card"><span class="ic">😤</span><div><strong>Clientes insatisfeitos</strong>e contratos rescindidos</div></div>
+      <div class="cost-card"><span class="ic">🔥</span><div><strong>Retrabalho em crise</strong>apagando incêndio</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 2 — POR QUE PRECISA ══ -->
+<div class="slide" id="s2">
+  <div class="inner">
+    <div>
+      <div class="lbl">Por que você precisa do Contrack</div>
+      <div class="h2">Planilha não <span class="grad-text">avisa.</span><br>O Contrack avisa.</div>
+      <div class="bod">Enquanto sua equipe usa planilhas e lembretes manuais, documentos vencem sem que ninguém perceba. O Contrack foi feito para acabar com isso.</div>
+    </div>
+    <div class="need-list">
+      <div class="need-item">
+        <div class="need-check">✓</div>
+        <div class="need-text"><strong>Visibilidade centralizada de todos os documentos</strong>Chega de procurar em planilhas espalhadas ou e-mails perdidos.</div>
+      </div>
+      <div class="need-item">
+        <div class="need-check">✓</div>
+        <div class="need-text"><strong>Alertas automáticos antes do vencimento</strong>O sistema avisa com 30, 15, 7 e 1 dia de antecedência — sem esforço manual.</div>
+      </div>
+      <div class="need-item">
+        <div class="need-check">✓</div>
+        <div class="need-text"><strong>Controle de quem faz o quê</strong>Hierarquia de perfis garante que cada funcionário veja e edite apenas o que deve.</div>
+      </div>
+      <div class="need-item">
+        <div class="need-check">✓</div>
+        <div class="need-text"><strong>Decisões baseadas em dados, não em memória</strong>Painel consolidado com status real de todos os documentos em tempo real.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 3 — DEMO ══ -->
+<div class="slide" id="s3">
+  <div class="inner">
+    <div>
+      <div class="lbl">Veja por você mesmo</div>
+      <div class="h2">Simples de usar.<br><span class="grad-text">Difícil de ignorar.</span></div>
+      <div class="bod">Em menos de 2 minutos você cadastra um cliente, associa um documento e já recebe o primeiro alerta de vencimento.</div>
+      <div class="check-list">
+        <div class="check-row"><span class="check-dot"></span>Interface validada com 12 usuários reais</div>
+        <div class="check-row"><span class="check-dot"></span>100% conseguiram usar sem treinamento</div>
+        <div class="check-row"><span class="check-dot"></span>Disponível agora em ambiente de produção</div>
+      </div>
+    </div>
+    <div class="vfw">
+      <div class="ftag">▶ DEMO AO VIVO</div>
+      <div class="vf">
+        <div class="vc">
+          <span class="cd"></span><span class="cd"></span><span class="cd"></span>
+          <span class="curl">3.150.249.219:5173 — Contrack</span>
+        </div>
+        <video autoplay muted loop playsinline style="width:100%;display:block;">
+          <source src="demo.mov" type="video/quicktime">
+          <source src="demo.mov" type="video/mp4">
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SLIDE 4 — VS CONCORRENTES ══ -->
+<div class="slide" id="s4">
+  <div class="inner">
+    <div class="lbl">Contrack vs. Alternativas</div>
+    <div class="h2">Por que não usar o que já existe?</div>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="width:30%">Recurso</th>
+          <th class="hl" style="width:23%">Contrack <span class="badge-contrack">VOCÊ AQUI</span></th>
+          <th style="width:16%">Planilhas</th>
+          <th style="width:16%">E-mail / Cal.</th>
+          <th style="width:15%">ERPs Genéricos</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="feat-col">Alertas automáticos de vencimento</td>
+          <td class="contrack-col"><span class="yes">✔ Escalonado (30/15/7/1d)</span></td>
+          <td class="other-col"><span class="no">✘ Manual</span></td>
+          <td class="other-col"><span class="par">⚠ Parcial</span></td>
+          <td class="other-col"><span class="par">⚠ Genérico</span></td>
+        </tr>
+        <tr>
+          <td class="feat-col">Focado em escritórios contábeis</td>
+          <td class="contrack-col"><span class="yes">✔ 100% específico</span></td>
+          <td class="other-col"><span class="no">✘ Não</span></td>
+          <td class="other-col"><span class="no">✘ Não</span></td>
+          <td class="other-col"><span class="no">✘ Genérico</span></td>
+        </tr>
+        <tr>
+          <td class="feat-col">Controle de acesso por perfil</td>
+          <td class="contrack-col"><span class="yes">✔ Admin / Funcionário</span></td>
+          <td class="other-col"><span class="no">✘ Não</span></td>
+          <td class="other-col"><span class="no">✘ Não</span></td>
+          <td class="other-col"><span class="par">⚠ Complexo</span></td>
+        </tr>
+        <tr>
+          <td class="feat-col">Curva de aprendizado</td>
+          <td class="contrack-col"><span class="yes">✔ Zero — sem treinamento</span></td>
+          <td class="other-col"><span class="par">⚠ Média</span></td>
+          <td class="other-col"><span class="yes">✔ Baixa</span></td>
+          <td class="other-col"><span class="no">✘ Alta</span></td>
+        </tr>
+        <tr>
+          <td class="feat-col">Custo de implantação</td>
+          <td class="contrack-col"><span class="yes">✔ Acessível</span></td>
+          <td class="other-col"><span class="yes">✔ Baixo</span></td>
+          <td class="other-col"><span class="yes">✔ Baixo</span></td>
+          <td class="other-col"><span class="no">✘ Alto</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ SLIDE 5 — POR QUE NOS CONTRATAR ══ -->
+<div class="slide" id="s5">
+  <div class="inner">
+    <div>
+      <div class="lbl">Por que escolher o Contrack</div>
+      <div class="h2">Solução real.<br><span class="grad-text">Time comprometido.</span></div>
+      <div class="bod">Não é um projeto acadêmico genérico — é um sistema feito com um cliente real, para um problema real, já rodando em produção.</div>
+      <div class="hire-list">
+        <div class="hire-item">
+          <div class="hire-num">01</div>
+          <div class="hire-text"><strong>Desenvolvido com cliente parceiro real</strong>Requisitos levantados diretamente com escritório contábil — não são hipóteses.</div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-num">02</div>
+          <div class="hire-text"><strong>Validado com usuários, não com suposições</strong>83% dos profissionais testados afirmaram que usariam na rotina profissional.</div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-num">03</div>
+          <div class="hire-text"><strong>Arquitetura sólida e escalável</strong>Spring Boot + React + Docker + PostgreSQL — preparado para crescer com o negócio.</div>
+        </div>
+        <div class="hire-item">
+          <div class="hire-num">04</div>
+          <div class="hire-text"><strong>Entrega rápida, time dedicado</strong>MVP completo em 4 meses, 13 reuniões documentadas, 90% do backlog entregue.</div>
+        </div>
+      </div>
+    </div>
+    <div class="cta-box">
+      <div class="cta-title">Experimente<br><span class="grad-text">agora mesmo.</span></div>
+      <div class="stat-row">
+        <div class="stat-box"><span class="stat-n">83%</span><span class="stat-l">adotariam</span></div>
+        <div class="stat-box"><span class="stat-n">100%</span><span class="stat-l">sem treino</span></div>
+        <div class="stat-box"><span class="stat-n">90%</span><span class="stat-l">backlog OK</span></div>
+      </div>
+      <div class="cta-url">🌐 3.150.249.219:5173</div>
+      <div style="font-size:13px;color:var(--muted);line-height:1.5;">
+        Login: <span style="color:var(--white);">admin@contrack.com</span><br>
+        Senha: <span style="color:var(--white);">admin123</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const DURATIONS = [10000, 11000, 14000, 12000, 13000]; // 60s
+  const total = DURATIONS.reduce((a,b)=>a+b,0);
+  const slides = document.querySelectorAll('.slide');
+  const pf = document.getElementById('pf');
+  const dotsEl = document.getElementById('dots');
+
+  slides.forEach((_,i) => {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i===0?' active':'');
+    dotsEl.appendChild(d);
+  });
+  const dotEls = dotsEl.querySelectorAll('.dot');
+
+  let current=0, startTime=null, elapsed=0;
+
+  function setSlide(idx) {
+    slides.forEach((s,i) => s.classList.toggle('active', i===idx));
+    dotEls.forEach((d,i) => d.classList.toggle('active', i===idx));
+    current = idx;
+  }
+
+  function tick(ts) {
+    if (!startTime) startTime = ts;
+    const t = ts - startTime + elapsed;
+    pf.style.width = Math.min((t/total)*100, 100) + '%';
+    let acc = 0;
+    for (let i=0; i<DURATIONS.length; i++) {
+      acc += DURATIONS[i];
+      if (t < acc) { if (current!==i) setSlide(i); break; }
+    }
+    if (t < total) requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+
+  document.body.addEventListener('click', () => {
+    if (current < slides.length - 1) {
+      let acc = 0;
+      for (let i=0; i<=current; i++) acc += DURATIONS[i];
+      elapsed = acc; startTime = null;
+      setSlide(current+1);
+      requestAnimationFrame(tick);
+    }
+  });
+</script>
+</body>
+</html>
