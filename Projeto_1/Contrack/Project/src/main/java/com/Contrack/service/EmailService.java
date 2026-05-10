@@ -36,15 +36,12 @@ public class EmailService {
     @Async
     public void enviarNotificacaoDocumento(Documento doc, String titulo, String textoTempo) {
 
-
-        List<Funcionario> funcionarios = funcionarioRepository.findAll();
-
-        if (funcionarios.isEmpty()) {
-            log.warn("Nenhum funcionário cadastrado no sistema para notificar.");
+        if (doc.getColaboradores() == null || doc.getColaboradores().isEmpty()) {
+            log.warn("Nenhum colaborador encontrado para o documento ID {}", doc.getId());
             return;
         }
 
-        for (Funcionario funcionario : funcionarios) {
+        for (Funcionario funcionario : doc.getColaboradores()) {
             String email = funcionario.getEmail();
 
             if (email == null || email.isBlank()) {
@@ -80,7 +77,7 @@ public class EmailService {
         context.setVariable("textoTempo", dados.getTextoTempo());
         context.setVariable("idCliente", dados.getIdCliente());
         context.setVariable("idDocumento", dados.getIdDocumento());
-        return templateEngine.process("email/template", context);
+        return templateEngine.process("email/template_v2", context);
     }
 
     private void enviarEmail(String destinatario, String assunto, String html) throws MessagingException {
