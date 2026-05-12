@@ -27,8 +27,6 @@ public class EmailService {
     
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
-    private final FuncionarioRepository funcionarioRepository;
-
 
     @Value("${app.mail.remetente}")
     private String remetente;
