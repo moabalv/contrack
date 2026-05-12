@@ -6,23 +6,47 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.Contrack.config.AuthenticationHelper;
 import com.Contrack.dto.ClientePostPutRequestDTO;
 import com.Contrack.dto.ClienteResponseDTO;
 import com.Contrack.model.Cliente;
+import com.Contrack.model.Documento.Documento;
+import com.Contrack.model.Funcionario.Funcionario;
 import com.Contrack.repository.ClienteRepository;
+import com.Contrack.repository.DocumentoRepository;
+
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ClienteServiceImpl implements ClienteService {
     @Autowired
     ClienteRepository clienteRepository;
+    @Autowired
+    DocumentoRepository documentoRepository;
+    
+    private final AuthenticationHelper authHelper;
 
     @Override
-    public List<ClienteResponseDTO> listarClientes(String ordenarPor) {
+    public List<ClienteResponseDTO> listarClientes(String ordenarPor, UserDetails userDetails) {
 
-        List<Cliente> clientes = clienteRepository.findAll();
+        List<Cliente> clientes;
+
+        if (authHelper.isAdmin(userDetails)) {
+            clientes = clienteRepository.findAll();
+        } else {
+            Funcionario funcionario = authHelper.obterFuncionarioAutenticado(userDetails);
+            clientes = documentoRepository.findByColaboradoresContaining(funcionario)
+                    .stream()
+                    .map(Documento::getCliente)
+                    .distinct()
+                    .collect(Collectors.toList());
+        }
+
 
         if (ordenarPor != null && ordenarPor.equalsIgnoreCase("nome")) {
             clientes = clientes.stream()
