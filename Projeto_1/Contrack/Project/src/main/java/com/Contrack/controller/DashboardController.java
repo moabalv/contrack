@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.Contrack.dto.Dashboard.DashboardResponseDTO;
@@ -28,8 +30,8 @@ public class DashboardController {
         @ApiResponse(responseCode = "404", description = "Dashboard não encontrado")
     })
     @GetMapping("")
-    public ResponseEntity<DashboardResponseDTO> getDashboardInfo() {
-        DashboardResponseDTO dashboardInfo = dashboardService.getDashboardInfo();
+    public ResponseEntity<DashboardResponseDTO> getDashboardInfo(@AuthenticationPrincipal UserDetails userDetails) {
+        DashboardResponseDTO dashboardInfo = dashboardService.getDashboardInfo(userDetails);
 
         return ResponseEntity.ok()
                 .contentType(MediaType.APPLICATION_JSON)

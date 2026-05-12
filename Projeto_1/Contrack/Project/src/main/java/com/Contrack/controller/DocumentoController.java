@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,18 +35,20 @@ public class DocumentoController {
                 description = "Critério de ordenação dos documentos",
                 example = "prazo | tipo"
         )
-            @RequestParam(required = false) String ordenarPor) {
+            @RequestParam(required = false) String ordenarPor,
+            @AuthenticationPrincipal UserDetails userDetails) {
 
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(documentoService.listarDocumentos(ordenarPor));
+                .body(documentoService.listarDocumentos(ordenarPor, userDetails));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> buscarDocumento(@PathVariable Long id) {
+    public ResponseEntity<?> buscarDocumento(@PathVariable Long id,
+                                              @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(documentoService.buscarDocumento(id));
+                .body(documentoService.buscarDocumento(id, userDetails));
     }
 
 
@@ -56,17 +60,18 @@ public class DocumentoController {
     }
 
     @GetMapping("/cliente/{clienteId}")
-    public ResponseEntity<?> getDocumentoByClienteId(@PathVariable Long clienteId) {
+    public ResponseEntity<?> getDocumentoByClienteId(@PathVariable Long clienteId, @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(documentoService.getDocumentoByClienteId(clienteId));
+                .body(documentoService.getDocumentoByClienteId(clienteId, userDetails));
     }
 
     @PostMapping(value = "/atualizar", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> atualizarDocumento(@Valid @RequestBody DocumentoRequestDTO documentoRequestDTO) {
+    public ResponseEntity<?> atualizarDocumento(@Valid @RequestBody DocumentoRequestDTO documentoRequestDTO,
+                                                 @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(documentoService.atualizaDocumento(documentoRequestDTO));
+                .body(documentoService.atualizaDocumento(documentoRequestDTO, userDetails));
     }
 
     @DeleteMapping("/{id}")
