@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.Contrack.dto.ClientePostPutRequestDTO;
@@ -32,10 +34,11 @@ public class ClienteController {
     public ResponseEntity<?> listarClientes(@Parameter(
                 description = "Critério de ordenação dos documentos",
                 example = "nome"
-        )@RequestParam(required = false) String ordenarPor) {
+        )@RequestParam(required = false) String ordenarPor,
+        @AuthenticationPrincipal UserDetails userDetails) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(clienteService.listarClientes(ordenarPor));
+                .body(clienteService.listarClientes(ordenarPor, userDetails));
     }
 
     @PostMapping("")

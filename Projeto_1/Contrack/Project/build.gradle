@@ -52,6 +52,11 @@ dependencies {
 
     /* --- MODELMAPPER --- */
     implementation 'org.modelmapper:modelmapper:3.2.0'
+
+    /* --- EMAIL --- */
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 }
 
 tasks.named('test') {
