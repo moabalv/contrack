@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.Contrack.model.Documento.Documento;
+import com.Contrack.model.Funcionario.Funcionario;
 import com.Contrack.model.Notificacao;
 
 @Repository
@@ -24,4 +25,8 @@ public interface NotificacaoRepository extends JpaRepository<Notificacao, Long> 
     );
 
     Page<Notificacao> findAll(Pageable pageable);
+
+    Page<Notificacao> findByLidoAndDocumentoColaboradoresContaining(Pageable pageable, boolean lido, Funcionario funcionario);
+
+    Page<Notificacao> findByDocumentoColaboradoresContaining(Pageable pageable, Funcionario funcionario);
 }
