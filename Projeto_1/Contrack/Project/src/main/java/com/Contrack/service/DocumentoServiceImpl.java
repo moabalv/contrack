@@ -13,9 +13,11 @@ import com.Contrack.repository.DocumentoRepository;
 import com.Contrack.repository.FuncionarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import com.Contrack.config.AuthenticationHelper;
 
 import java.math.BigDecimal;
 import java.text.Normalizer;
@@ -33,24 +35,43 @@ public class DocumentoServiceImpl implements DocumentoService {
     private final DocumentoRepository documentoRepository;
     private final ClienteRepository clienteRepository;
     private final FuncionarioRepository funcionarioRepository;
+    private final AuthenticationHelper authHelper;
+
     
     @Override
     @Transactional
-    public List<DocumentoResponseDTO> getDocumentoByClienteId(Long clienteId) {
+    public List<DocumentoResponseDTO> getDocumentoByClienteId(Long clienteId, UserDetails userDetails) {
         Cliente cliente = clienteRepository.findById(clienteId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente não encontrado"));
+
+
         List<Documento> documentos = documentoRepository.findByCliente(cliente);
+
+        if (!authHelper.isAdmin(userDetails)) {
+            Funcionario funcionario = authHelper.obterFuncionarioAutenticado(userDetails);
+            documentos = documentos.stream()
+                .filter(d -> d.getColaboradores().contains(funcionario))
+                .collect(Collectors.toList());
+    }
+
         return documentos.stream()
                 .map(DocumentoResponseDTO::new)
                 .collect(Collectors.toList());}
 
     @Override
     @Transactional
-    public List<DocumentoResponseDTO> listarDocumentos(String ordenarPor) {
+    public List<DocumentoResponseDTO> listarDocumentos(String ordenarPor, UserDetails userDetails) {
 
         LocalDate hoje = LocalDate.now();
 
-        List<Documento> documentos = documentoRepository.findAll();
+        List<Documento> documentos;
+
+        if (authHelper.isAdmin(userDetails)) {
+            documentos = documentoRepository.findAll();
+        } else {
+            Funcionario funcionario = authHelper.obterFuncionarioAutenticado(userDetails);
+            documentos = documentoRepository.findByColaboradoresContaining(funcionario);
+        }
 
         documentos.forEach(doc -> doc.atualizarStatus(hoje));
 
@@ -86,9 +107,12 @@ public class DocumentoServiceImpl implements DocumentoService {
 
     @Override
     @Transactional
-    public DocumentoResponseDTO buscarDocumento(Long id) {
+    public DocumentoResponseDTO buscarDocumento(Long id, UserDetails userDetails) {
         Documento documento = documentoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Documento não encontrado"));
+        
+        authHelper.verificarAcessoAoDocumento(documento, userDetails);
+        
         documento.atualizarStatus(LocalDate.now());
         return new DocumentoResponseDTO(documento);
     }
@@ -195,13 +219,15 @@ public class DocumentoServiceImpl implements DocumentoService {
 
     @Override
     @Transactional
-    public DocumentoResponseDTO atualizaDocumento(DocumentoRequestDTO dto) {
+    public DocumentoResponseDTO atualizaDocumento(DocumentoRequestDTO dto, UserDetails userDetails) {
         if (dto == null || dto.getDocumentoId() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Identificador do documento é obrigatório");
         }
 
         Documento documento = documentoRepository.findById(dto.getDocumentoId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Documento não encontrado"));
+
+        authHelper.verificarAcessoAoDocumento(documento, userDetails);
 
         TipoDocumento tipoInformado = mapearTipoDocumento(dto.getTipoDocumento());
         if (!documento.getTipoDocumento().equals(tipoInformado)) {
