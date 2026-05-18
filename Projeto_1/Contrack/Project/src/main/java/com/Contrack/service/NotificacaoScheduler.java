@@ -96,7 +96,6 @@ public class NotificacaoScheduler {
                 .titulo(titulo)
                 .descricao(mensagemDetalhada)
                 .status(Status.PENDENTE)
-                .lido(false)
                 .data(LocalDateTime.now()) // Data de criação da notificação é AGORA
                 .build();
 
