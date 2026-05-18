@@ -23,6 +23,7 @@ public class NotificacaoScheduler {
 
     private final DocumentoRepository documentoRepository;
     private final NotificacaoRepository notificacaoRepository;
+    private final EmailService emailService;
 
     @Scheduled(cron = "1 * * * * *", zone = "America/Sao_Paulo") // Rodando a cada minuto para testes
     @Transactional
@@ -100,6 +101,9 @@ public class NotificacaoScheduler {
                 .build();
 
         notificacaoRepository.save(notificacao);
+
+        emailService.enviarNotificacaoDocumento(doc, titulo, textoTempo); // Email enviado
+
         log.info("Notificação gerada: '{}' para documento ID {}", titulo, doc.getId());
     }
 }
